@@ -1,0 +1,80 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+:host {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  padding: $baseline-2;
+  background: #0008;
+  color: $color-white;
+}
+
+.left {
+  flex: 0 0 150px;
+  display: flex;
+  flex-direction: column;
+  margin-right: $baseline-2;
+
+  img {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  a {
+    margin-top: 5px;
+    padding: 5px;
+    font-size: 14px;
+    text-align: center;
+    background: #000A;
+    border-radius: 5px;
+    text-decoration: none;
+
+    &:hover {
+      background: #555A;
+      color: $color-white;
+    }
+  }
+}
+
+.center {
+  flex-grow: 1;
+
+  ul {
+    color: $color-grey;
+  }
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+
+  li {
+    margin-right: $baseline-2;
+
+    &:before {
+      display: none;
+    }
+  }
+}
+
+p {
+  margin-top: $baseline;
+  font-size: 14px;
+}
+
+.right {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  button {
+    align-self: stretch;
+  }
+}

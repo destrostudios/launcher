@@ -1,0 +1,145 @@
+@import './styles/breakpoints';
+@import './styles/colors';
+@import './styles/sizes';
+
+html, body, main {
+  height: 100%;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background: #111117;
+  background-position: center;
+  background-size: cover;
+  transition: background 200ms;
+}
+
+body, input[type=text], input[type=password], input[type=submit], textarea, button {
+  font-family: 'Open Sans', Tahoma, sans-serif;
+  font-size: 16px;
+  color: $color-grey;
+}
+
+main {
+  padding: 90px 25px $baseline-2 25px;
+}
+
+a {
+  cursor: pointer;
+
+  &, &:visited {
+    color: $color-white;
+    text-decoration: underline;
+  }
+
+  &:hover {
+    color: $color-grey;
+  }
+}
+
+h1, h2 {
+  margin-top: 0;
+  margin-bottom: $baseline;
+  color: $color-white;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  flex-direction: row;
+
+  &:not(:last-child) {
+    margin-bottom: $baseline / 2;
+  }
+
+  &:before {
+    content: '–';
+    margin-right: 5px + $baseline;
+    align-self: flex-start;
+  }
+
+  a:not(:hover) {
+    &, &:visited {
+      color: $color-dark-grey;
+    }
+  }
+}
+
+figure {
+  margin: 0;
+}
+
+blockquote {
+  margin: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+input[type=text], input[type=password], input[type=submit], textarea, button {
+  height: 44px;
+  padding-left: $baseline;
+  padding-right: $baseline;
+  border: 1px solid $color-grey;
+  border-radius: 5px;
+}
+
+input[type=text], input[type=password], textarea {
+  width: 100%;
+  background: #111117;
+  color: $color-grey;
+
+  &:focus {
+    outline: none;
+    color: $color-white;
+    border-color: $color-white;
+  }
+}
+
+textarea {
+  resize: none;
+  // https://stackoverflow.com/questions/47719919/how-to-remove-margin-from-the-text-area
+  vertical-align: bottom;
+}
+
+input[type=submit], button {
+  padding-left: $baseline * 1.5;
+  padding-right: $baseline * 1.5;
+  background: #FBFBFB;
+  border-color: #111117;
+  color: #111117;
+  cursor: pointer;
+
+  &:hover {
+    color: #000;
+  }
+}

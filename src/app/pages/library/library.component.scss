@@ -1,0 +1,43 @@
+@import '../../../styles/sizes';
+
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+.no-apps {
+  flex-grow: 1;
+  align-self: center;
+  text-align: center;
+}
+
+.apps {
+  flex: 0 0 200px;
+
+  input {
+    margin-bottom: $baseline-2;
+  }
+
+  li {
+    margin-bottom: 0;
+
+    &:before {
+      display: none;
+    }
+
+    a {
+      flex-grow: 1;
+      text-decoration: none;
+    }
+  }
+}
+
+.app {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+ds-app-hub {
+  margin-top: 64px;
+}

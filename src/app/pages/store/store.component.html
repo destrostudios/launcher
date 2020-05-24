@@ -1,0 +1,15 @@
+<main>
+  <a *ngIf="featuredApp | async as featuredApp" [routerLink]="'/store/' + featuredApp.id" class="featured">
+    <h1>{{ ('FEATURED' | translate) + ': ' }}</h1>
+    <div class="featured-title">{{featuredApp.name}}</div>
+  </a>
+  <div class="container">
+    <h1 translate="ALL"></h1>
+    <div class="all">
+      <a *ngFor="let app of (apps | async)"
+        [routerLink]="'/store/' + app.id">
+        <ds-store-tile [app]="app"></ds-store-tile>
+      </a>
+    </div>
+  </div>
+</main>

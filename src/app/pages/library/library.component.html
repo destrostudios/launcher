@@ -1,0 +1,25 @@
+<main *ngIf="displayedApps | async as displayedApps">
+  <ng-container *ngIf="(hasOwnedApps | async) === false">
+    <h1 class="no-apps" translate="OH_NO_YOU_DONT_HAVE_ANY_APPS"></h1>
+  </ng-container>
+  <ng-container *ngIf="hasOwnedApps | async">
+    <div class="apps">
+      <input
+        type="text"
+        [placeholder]="'SEARCH' | translate"
+        [value]="librarySearchText | async"
+        (keyup)="setLibrarySearchText($event)"
+      >
+      <ul>
+        <li *ngFor="let app of displayedApps" [ngClass]="{ 'selected' : app === (selectedApp | async) }">
+          <ds-library-tile [app]="app" (click)="selectApp(app)"></ds-library-tile>
+        </li>
+      </ul>
+    </div>
+    <div class="app">
+      <ds-app-hub *ngIf="selectedApp | async" [app]="selectedApp | async">
+        <button translate="PLAY"></button>
+      </ds-app-hub>
+    </div>
+  </ng-container>
+</main>

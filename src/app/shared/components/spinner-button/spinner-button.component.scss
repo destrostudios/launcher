@@ -1,0 +1,15 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+@import '../../../../styles/fonts/font-awesome';
+
+:host {
+  position: relative;
+}
+
+button, input {
+  width: 100%;
+
+  &[disabled] {
+    color: transparent;
+  }
+}

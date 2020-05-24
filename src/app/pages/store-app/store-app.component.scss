@@ -1,0 +1,29 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+@import '../../../styles/fonts/font-awesome';
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  align-self: flex-start;
+  text-decoration: none;
+
+  h1:hover {
+    color: $color-grey;
+  }
+
+  i {
+    margin-right: $baseline;
+  }
+}
+
+ds-app-hub {
+  margin-top: $baseline;
+}
+
+.error {
+  margin-right: 15px;
+}

@@ -1,0 +1,10 @@
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+h1 {
+  flex-grow: 1;
+  align-self: center;
+  text-align: center;
+}

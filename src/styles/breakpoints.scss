@@ -1,0 +1,26 @@
+$breakpoint-small: 480px;
+$breakpoint-medium: 830px;
+
+@mixin bp-xs-max {
+  @media (max-width: ($breakpoint-small - 1)) {
+    @content;
+  }
+}
+
+@mixin bp-sm {
+  @media (min-width: $breakpoint-small) {
+    @content;
+  }
+}
+
+@mixin bp-sm-max {
+  @media (max-width: ($breakpoint-medium - 1)) {
+    @content;
+  }
+}
+
+@mixin bp-md {
+  @media (min-width: $breakpoint-medium) {
+    @content;
+  }
+}

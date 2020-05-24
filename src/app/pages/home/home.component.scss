@@ -1,0 +1,30 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.news {
+  flex-grow: 1;
+}
+
+.options {
+  text-align: right;
+
+  a {
+    color: $color-grey;
+    text-decoration: none;
+
+    &:hover, &.selected {
+      color: $color-white;
+    }
+
+    & + a {
+      margin-left: $baseline;
+      padding-left: $baseline;
+      border-left: 1px solid $color-grey;
+    }
+  }
+}

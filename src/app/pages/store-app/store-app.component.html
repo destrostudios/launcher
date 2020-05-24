@@ -1,0 +1,28 @@
+<main>
+  <a routerLink="/store" (click)="deselectApp();">
+    <h1>
+      <i class="fa fa-arrow-left"></i>
+      <span translate="BACK"></span>
+    </h1>
+  </a>
+  <ds-app-hub *ngIf="app | async as app" [app]="app">
+    <ds-spinner-button
+      *ngIf="(isSelectedAppOwned_Store | async) === false"
+      text="ADD_TO_LIBRARY"
+      [isLoading]="isAppAdditionToAccountLoading | async"
+      (action)="addAppToAccount(app)"
+    ></ds-spinner-button>
+    <ds-spinner-button
+      *ngIf="isSelectedAppOwned_Store | async"
+      text="REMOVE_FROM_LIBRARY"
+      [isLoading]="isAppRemovalFromAccountLoading | async"
+      (action)="removeAppFromAccount(app)"
+    ></ds-spinner-button>
+  </ds-app-hub>
+  <ds-modal *ngIf="isAppAdditionToAccountErrorShown | async" (closeModal)="hideAppAdditionToAccountError()">
+    <span class="error" translate="AN_UNEXPECTED_ERROR_OCCURED"></span>
+  </ds-modal>
+  <ds-modal *ngIf="isAppRemovalFromAccountErrorShown | async" (closeModal)="hideAppRemovalFromAccountError()">
+    <span class="error" translate="AN_UNEXPECTED_ERROR_OCCURED"></span>
+  </ds-modal>
+</main>

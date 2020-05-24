@@ -1,0 +1,16 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+  <label for="login">Login</label>
+  <input id="login" formControlName="login" type="text" autocomplete="off">
+  <label for="password">Password</label>
+  <input id="password" formControlName="password"  type="password">
+  <div *ngIf="errorMessage" class="error" [translate]="errorMessage"></div>
+  <div class="bottom">
+    <ds-spinner-button
+      [formGroup]="registrationForm"
+      text="REGISTER"
+      [isLoading]="isLoading"
+    ></ds-spinner-button>
+    <div class="separator"></div>
+    <a translate="LOGIN" (click)="login.emit()"></a>
+  </div>
+</form>

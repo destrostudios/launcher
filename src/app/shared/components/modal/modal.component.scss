@@ -1,0 +1,35 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+@import '../../../../styles/fonts/font-awesome';
+
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #000C;
+}
+
+.container {
+  position: relative;
+  padding: $baseline-2;
+  background-color: #1A1A1ACC;
+  border-radius: 5px;
+}
+
+.fa {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-white;
+  }
+}

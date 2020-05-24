@@ -1,0 +1,13 @@
+<main>
+  <h1 translate="NEWS"></h1>
+  <div class="news">
+    <ds-news *ngFor="let news of (latestNews | async)" [news]="news"></ds-news>
+  </div>
+  <div class="options">
+    <a
+      *ngFor="let displayedLanguage of LANGUAGES"
+      (click)="setLanguage(displayedLanguage)"
+      [ngClass]="{ selected : (displayedLanguage === (language | async)) }"
+    >{{displayedLanguage | uppercase}}</a>
+  </div>
+</main>

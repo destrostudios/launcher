@@ -1,0 +1,23 @@
+{
+  "ADD_TO_LIBRARY": "Zur Bibl. hinzufügen",
+  "AN_UNEXPECTED_ERROR_OCCURED": "Ein unerwarteter Fehler is aufgetreten",
+  "ALL": "Alle",
+  "BACK": "Zurück",
+  "FEATURED": "Empfohlen",
+  "FORGOT_PASSWORD": "Passwort vergessen?",
+  "HOME": "Home",
+  "NEWS": "Neuigkeiten",
+  "LIBRARY": "Bibliothek",
+  "LOGIN": "Login",
+  "LOGIN_ALREADY_EXISTING": "Login existiert bereits",
+  "LOGIN_NOT_FOUND": "Login nicht gefunden",
+  "LOGOUT": "Logout",
+  "OH_NO_YOU_DONT_HAVE_ANY_APPS": "Oh nein, du hast noch keine Apps :(",
+  "PLAY": "Spielen",
+  "REGISTER": "Registrieren",
+  "REMOVE_FROM_LIBRARY": "Aus der Biblioth. entf.",
+  "SEARCH": "Suchen",
+  "STORE": "Store",
+  "THERE_SEEMS_TO_BE_A_PROBLEM_WITH_OUR_SERVERS": "Es scheint ein Problem mit unseren Servern zu geben :(",
+  "WRONG_PASSWORD": "Falsches Passwort"
+}

@@ -1,0 +1,16 @@
+<ds-modal [closeable]="false">
+  <ds-login
+    *ngIf="isLoginOrRegistrationShown | async"
+    [isLoading]="isLoginLoading | async"
+    [errorMessage]="loginErrorMessage | async"
+    (login)="startLoginProcess($event)"
+    (register)="openRegistration()"
+  ></ds-login>
+  <ds-registration
+    *ngIf="(isLoginOrRegistrationShown | async) === false"
+    [isLoading]="isRegistrationLoading | async"
+    [errorMessage]="registrationErrorMessage | async"
+    (login)="openLogin()"
+    (register)="register($event)"
+  ></ds-registration>
+</ds-modal>

@@ -1,0 +1,27 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 90px;
+  padding: 1px;
+  transition: background-color 200ms;
+  cursor: pointer;
+}
+
+:host-context(.selected), :host:hover {
+  background-color: #FFF3;
+}
+
+img {
+  height: 100%;
+  background: red;
+}
+
+.name {
+  margin-left: $baseline;
+  color: $color-white;
+}

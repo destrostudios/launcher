@@ -1,0 +1,44 @@
+@import '../../../styles/colors';
+@import '../../../styles/sizes';
+
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 70px 0 0 0;
+}
+
+.featured {
+  flex-grow: 1;
+  padding: $baseline-2 25px;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-white;
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
+
+  .featured-title {
+    font-size: 40px;
+  }
+}
+
+.container {
+  padding: $baseline-2 25px $baseline-2 25px;
+  background: #000000F0;
+}
+
+.all {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: -1 * $baseline;
+
+  a {
+    flex: 0 0 20%;
+    padding: $baseline;
+    text-decoration: none;
+  }
+}

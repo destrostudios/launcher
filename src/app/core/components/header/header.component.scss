@@ -1,0 +1,55 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  padding-top: $baseline-2;
+  padding-bottom: $baseline-2;
+  background: #0008;
+}
+
+img {
+  height: 30px;
+  margin-left: 25px;
+  margin-right: $baseline;
+}
+
+nav, .right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+nav {
+  flex-grow: 1;
+
+  a {
+    &, &:hover {
+      text-decoration: none;
+    }
+
+    &.active {
+      color: $color-white;
+      border-bottom-color: pink;
+    }
+  }
+}
+
+nav a, .right {
+  margin-left: $baseline-2;
+  margin-right: $baseline-2;
+  color: $color-grey;
+
+  &:hover {
+    color: $color-white;
+  }
+}
+
+.right {
+  cursor: pointer;
+}

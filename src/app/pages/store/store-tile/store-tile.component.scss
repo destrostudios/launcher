@@ -1,0 +1,22 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+:host {
+  display: block;
+  padding: 1px;
+  transition: background-color 200ms;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #FFF3;
+  }
+}
+
+img {
+  width: 100%;
+}
+
+.name {
+  padding: $baseline;
+  color: $color-white;
+}

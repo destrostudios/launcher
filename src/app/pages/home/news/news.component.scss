@@ -1,0 +1,17 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+:host {
+  display: block;
+  margin-bottom: $baseline;
+}
+
+h2 {
+  margin-bottom: 0;
+}
+
+div {
+  font-size: 14px;
+  text-align: right;
+  color: $color-white;
+}
