@@ -1,5 +1,4 @@
 export enum LocalAppVersion {
-  UNINSTALLED,
   CHECKING_UPDATE,
   OUTDATED,
   UPDATING,

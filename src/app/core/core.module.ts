@@ -87,7 +87,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     },
     {
       provide: MASTERSERVER_URL,
-      useValue: (environment.production ? 'http://localhost:8080' : '')
+      useValue: environment.masterserverUrl
     }
   ],
   exports: [

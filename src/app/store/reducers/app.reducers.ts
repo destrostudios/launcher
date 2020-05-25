@@ -105,18 +105,12 @@ const reducer = createReducer(
       }
     }))
   })),
-  on(AppActions.setUninstalled, (state, { appId }) => ({
+  on(AppActions.setAppCompared, (state, { appId, outdatedFilePaths }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
-      version: LocalAppVersion.UNINSTALLED
-    }))
-  })),
-  on(AppActions.setOutdated, (state, { appId }) => ({
-    ...state,
-    localApps: updateLocalApps(state.localApps, appId, localApp => ({
-      ...localApp,
-      version: LocalAppVersion.OUTDATED
+      version: ((outdatedFilePaths.length > 0) ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
+      outdatedFilePaths
     }))
   })),
   on(AppActions.updateApp, (state, { appId }) => ({
@@ -134,11 +128,12 @@ const reducer = createReducer(
       updateProgress
     }))
   })),
-  on(AppActions.setUpToDate, (state, { appId }) => ({
+  on(AppActions.setUpdateFinished, (state, { appId }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
       version: LocalAppVersion.UP_TO_DATE,
+      outdatedFilePaths: [],
       updateProgress: null
     }))
   })),

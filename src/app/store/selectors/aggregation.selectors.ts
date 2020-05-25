@@ -72,13 +72,3 @@ export const isSelectedAppOwned_Store = createSelector(
     return ownedAppIds.includes(selectedApp_Store.id);
   }
 );
-
-export const isSelectedAppOwned_Library = createSelector(
-  getSelectedApp_Library, getOwnedAppIds,
-  (selectedApp_Library, ownedAppIds) => {
-    if ((!selectedApp_Library) || (!ownedAppIds)) {
-      return null;
-    }
-    return ownedAppIds.includes(selectedApp_Library.id);
-  }
-);

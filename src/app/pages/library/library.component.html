@@ -17,8 +17,18 @@
       </ul>
     </div>
     <div class="app">
-      <ds-app-hub *ngIf="selectedApp | async" [app]="selectedApp | async">
-        <button translate="PLAY"></button>
+      <ds-app-hub *ngIf="selectedApp | async as selectedApp" [app]="selectedApp">
+        <button
+          *ngIf="(selectedApp_LocalVersion | async) === LocalAppVersion.UP_TO_DATE"
+          translate="PLAY"
+          (click)="startApp(selectedApp.id)"
+        ></button>
+        <button
+          *ngIf="(selectedApp_LocalVersion | async) !== LocalAppVersion.UP_TO_DATE"
+          [translate]="getUpdateButtonText(selectedApp_LocalVersion | async)"
+          [disabled]="((selectedApp_LocalVersion | async) !== LocalAppVersion.OUTDATED) || (isSomeLocalAppUpdating | async)"
+          (click)="updateApp(selectedApp.id)"
+        ></button>
       </ds-app-hub>
     </div>
   </ng-container>

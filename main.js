@@ -2,6 +2,8 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const url = require('url');
 
+const {compareAppFiles, startApp, updateAppFiles} = require('./src/main/local-apps');
+
 let mainWindow;
 
 function createWindow() {
@@ -42,10 +44,8 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('minimizeWindow', () => {
-  mainWindow.minimize();
-});
-
-ipcMain.on('closeWindow', () => {
-  mainWindow.close();
-});
+ipcMain.on('minimizeWindow', () => mainWindow.minimize());
+ipcMain.on('closeWindow', () => mainWindow.close());
+ipcMain.on('compareAppFiles', (event, app, appFiles) => compareAppFiles(event, app, appFiles));
+ipcMain.on('updateAppFiles', (event, app, appFiles) => updateAppFiles(event, app, appFiles));
+ipcMain.on('startApp', (event, app) => startApp(event, app));

@@ -29,6 +29,7 @@ export function updateLocalApps(localApps: LocalApp[], appId: number, updatedLoc
       appId,
       files: null,
       version: null,
+      outdatedFilePaths: null,
       updateProgress: null,
       isStarting: false,
     };

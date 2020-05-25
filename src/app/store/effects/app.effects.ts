@@ -3,10 +3,12 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
-import {map, catchError, switchMap, withLatestFrom, flatMap} from 'rxjs/operators';
+import {catchError, flatMap, map, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {AppHttpService} from '../../core/services/app-http/app-http.service';
+import {IpcService} from '../../core/services/ipc/ipc.service';
 import {getApp, getLocalApp, getPreselectedApp} from '../../core/util/app/app.util';
+import {LocalAppVersion} from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
 import {getDisplayedLibraryApps} from '../selectors/aggregation.selectors';
@@ -20,7 +22,15 @@ export class AppEffects {
     private actions: Actions,
     private appStore: Store<AppState>,
     private appHttpService: AppHttpService,
-  ) {}
+    private ipcService: IpcService,
+  ) {
+    this.ipcService.on('appFilesCompared', (event, appId, outdatedFilePaths) => {
+      this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFilePaths }));
+    });
+    this.ipcService.on('appFilesUpdated', (event, appId) => {
+      this.appStore.dispatch(AppActions.setUpdateFinished({ appId }));
+    });
+  }
 
   loadApps = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadApps),
@@ -28,11 +38,6 @@ export class AppEffects {
       map(apps => AppActions.loadAppsSuccessful({ apps })),
       catchError(error => of(AppActions.loadAppsError({ error })))
     ))
-  ));
-
-  startApp = createEffect(() => this.actions.pipe(
-    ofType(AppActions.startApp),
-    map(({ appId }) => AppActions.loadAppFiles({ appId }))
   ));
 
   loadAppFilesAfterAppsLoaded = createEffect(() => this.actions.pipe(
@@ -53,33 +58,41 @@ export class AppEffects {
     ))
   ));
 
-  compareLocalFilesToAppFiles = createEffect(() => this.actions.pipe(
+  compareLocalAppFilesToAppFiles = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadAppFilesSuccessful),
     withLatestFrom(this.appStore.select(getApps)),
     switchMap(([{ appId, appFiles }, apps]) => {
       const app = getApp(apps, appId);
-      console.log('Compare local files of app ' + app.name + ' to newest files (' + appFiles.length + ')');
+      this.ipcService.send('compareAppFiles', app, appFiles);
       return EMPTY;
     })
   ));
 
   updateApp = createEffect(() => this.actions.pipe(
     ofType(AppActions.updateApp),
-    withLatestFrom(this.appStore.select(getApps)),
-    switchMap(([{ appId }, apps]) => {
+    withLatestFrom(
+      this.appStore.select(getApps),
+      this.appStore.select(getLocalApps),
+    ),
+    switchMap(([{ appId }, apps, localApps]) => {
       const app = getApp(apps, appId);
-      console.log('Update app ' + app.name);
+      const localApp = getLocalApp(localApps, appId);
+      this.ipcService.send('updateAppFiles', app, localApp.files.data);
       return EMPTY;
     })
   ));
 
   allowAppStartWhenUpToDate = createEffect(() => this.actions.pipe(
-    ofType(AppActions.setUpToDate),
-    withLatestFrom(this.appStore.select(getLocalApps)),
-    switchMap(([{ appId }, localApps]) => {
+    ofType(AppActions.setAppCompared, AppActions.setUpdateFinished),
+    withLatestFrom(
+      this.appStore.select(getApps),
+      this.appStore.select(getLocalApps),
+    ),
+    switchMap(([{ appId }, apps, localApps]) => {
       const localApp = getLocalApp(localApps, appId);
-      if (localApp.isStarting) {
-        console.log('Start app ' + localApp.appId);
+      if ((localApp.version === LocalAppVersion.UP_TO_DATE) && localApp.isStarting) {
+        const app = getApp(apps, appId);
+        this.ipcService.send('startApp', app);
       }
       return EMPTY;
     })

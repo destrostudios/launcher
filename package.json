@@ -5,12 +5,13 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng build --base-href ./ && npm run electron",
+    "start:prod": "ng build --prod --base-href ./ && npm run electron",
+    "electron": "electron .",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start:electron": "ng build --prod --base-href ./ && electron .",
     "deploy": "npm run build --prod && node deployment/scripts/upload.js"
   },
   "private": true,
