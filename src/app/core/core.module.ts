@@ -47,7 +47,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     StoreModule.forFeature('news', newsReducer),
     StoreModule.forFeature('user', userReducer),
     EffectsModule.forRoot([ AppEffects, ConfigEffects, LayoutEffects, NewsEffects, UserEffects ]),
-    StoreDevtoolsModule.instrument({ maxAge: 10 }),
+    StoreDevtoolsModule.instrument({ maxAge: 50 }),
 
     TranslateModule.forRoot({
       loader: {

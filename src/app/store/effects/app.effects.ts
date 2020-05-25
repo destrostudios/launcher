@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
-import {map, catchError, switchMap, withLatestFrom} from 'rxjs/operators';
+import {map, catchError, switchMap, withLatestFrom, flatMap} from 'rxjs/operators';
 
 import {AppHttpService} from '../../core/services/app-http/app-http.service';
-import {getApp, getPreselectedApp} from '../../core/util/app/app.util';
+import {getApp, getLocalApp, getPreselectedApp} from '../../core/util/app/app.util';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
+import {getDisplayedLibraryApps} from '../selectors/aggregation.selectors';
+import {getApps, getLocalApps, getSelectedApp_Library} from '../selectors/app.selectors';
 import {AppState} from '../state/app-state.model';
-import {getDisplayedLibraryApps, getOwnedApps, isSelectedAppOwned_Library} from '../selectors/aggregation.selectors';
-import {getSelectedApp_Library} from '../selectors/app.selectors';
 
 @Injectable()
 export class AppEffects {
@@ -28,6 +28,61 @@ export class AppEffects {
       map(apps => AppActions.loadAppsSuccessful({ apps })),
       catchError(error => of(AppActions.loadAppsError({ error })))
     ))
+  ));
+
+  startApp = createEffect(() => this.actions.pipe(
+    ofType(AppActions.startApp),
+    map(({ appId }) => AppActions.loadAppFiles({ appId }))
+  ));
+
+  loadAppFilesAfterAppsLoaded = createEffect(() => this.actions.pipe(
+    ofType(AppActions.loadAppsSuccessful),
+    switchMap(({ apps }) => apps.map(app => AppActions.loadAppFiles({ appId: app.id })))
+  ));
+
+  loadAppFilesWhenStarting = createEffect(() => this.actions.pipe(
+    ofType(AppActions.startApp),
+    map(({ appId }) => AppActions.loadAppFiles({ appId }))
+  ));
+
+  loadAppFiles = createEffect(() => this.actions.pipe(
+    ofType(AppActions.loadAppFiles),
+    flatMap(({ appId }) => this.appHttpService.getAppFiles(appId).pipe(
+      map(appFiles => AppActions.loadAppFilesSuccessful({ appId, appFiles })),
+      catchError(error => of(AppActions.loadAppFilesError({ appId, error })))
+    ))
+  ));
+
+  compareLocalFilesToAppFiles = createEffect(() => this.actions.pipe(
+    ofType(AppActions.loadAppFilesSuccessful),
+    withLatestFrom(this.appStore.select(getApps)),
+    switchMap(([{ appId, appFiles }, apps]) => {
+      const app = getApp(apps, appId);
+      console.log('Compare local files of app ' + app.name + ' to newest files (' + appFiles.length + ')');
+      return EMPTY;
+    })
+  ));
+
+  updateApp = createEffect(() => this.actions.pipe(
+    ofType(AppActions.updateApp),
+    withLatestFrom(this.appStore.select(getApps)),
+    switchMap(([{ appId }, apps]) => {
+      const app = getApp(apps, appId);
+      console.log('Update app ' + app.name);
+      return EMPTY;
+    })
+  ));
+
+  allowAppStartWhenUpToDate = createEffect(() => this.actions.pipe(
+    ofType(AppActions.setUpToDate),
+    withLatestFrom(this.appStore.select(getLocalApps)),
+    switchMap(([{ appId }, localApps]) => {
+      const localApp = getLocalApp(localApps, appId);
+      if (localApp.isStarting) {
+        console.log('Start app ' + localApp.appId);
+      }
+      return EMPTY;
+    })
   ));
 
   deselectUndisplayedAppLibrary = createEffect(() => this.actions.pipe(

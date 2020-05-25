@@ -30,7 +30,12 @@ export class LayoutEffects {
   ));
 
   navigateToOfflineWhenOffline = createEffect(() => this.actions.pipe(
-    ofType(ConfigActions.loadClientConfigsError, AppActions.loadAppsError, NewsActions.loadLatestNewsError),
+    ofType(
+      ConfigActions.loadClientConfigsError,
+      AppActions.loadAppsError,
+      NewsActions.loadLatestNewsError,
+      AppActions.loadAppFilesError
+    ),
     map(() => LayoutActions.navigate({ route: 'offline' })),
   ));
 

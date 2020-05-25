@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {App} from '../../../model/app.model';
+import {AppFile} from '../../../model/app-file.model';
 
 @Injectable()
 export class AppHttpService {
@@ -21,5 +22,9 @@ export class AppHttpService {
 
   removeFromAccount(appId: number): Observable<void> {
     return this.httpClient.get<void>('/api/apps/' + appId + '/removeFromAccount');
+  }
+
+  getAppFiles(appId: number): Observable<AppFile[]> {
+    return this.httpClient.get<AppFile[]>('/api/apps/' + appId + '/files');
   }
 }

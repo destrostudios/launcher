@@ -2,11 +2,14 @@ import {Action} from 'rxjs/internal/scheduler/Action';
 
 import {createReducer, on} from '@ngrx/store';
 
+import {updateLocalApps} from '../../core/util/app/app.util';
+import {LocalAppVersion} from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import {AppState} from '../state/app-state.model';
 
 const initialState: AppState = {
   apps: null,
+  localApps: null,
   selectedAppId_Store: null,
   selectedAppId_Library: null,
   librarySearchText: ''
@@ -20,7 +23,8 @@ const reducer = createReducer(
       isLoading: true,
       data: null,
       error: null
-    }
+    },
+    localApps: null
   })),
   on(AppActions.loadAppsSuccessful, (state, { apps }) => ({
     ...state,
@@ -28,7 +32,8 @@ const reducer = createReducer(
       isLoading: false,
       data: apps,
       error: null
-    }
+    },
+    localApps: []
   })),
   on(AppActions.loadAppsError, (state, { error }) => ({
     ...state,
@@ -36,7 +41,8 @@ const reducer = createReducer(
       isLoading: false,
       data: null,
       error
-    }
+    },
+    localApps: null
   })),
   on(AppActions.selectApp_Store, (state, { appId }) => ({
     ...state,
@@ -57,6 +63,91 @@ const reducer = createReducer(
   on(AppActions.setLibrarySearchText, (state, { text }) => ({
     ...state,
     librarySearchText: text
+  })),
+  on(AppActions.startApp, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      isStarting: true
+    }))
+  })),
+  on(AppActions.loadAppFiles, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.CHECKING_UPDATE,
+      files: {
+        isLoading: true,
+        data: null,
+        error: null
+      }
+    }))
+  })),
+  on(AppActions.loadAppFilesSuccessful, (state, { appId, appFiles }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      files: {
+        isLoading: false,
+        data: appFiles,
+        error: null
+      }
+    }))
+  })),
+  on(AppActions.loadAppFilesError, (state, { appId, error }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      files: {
+        isLoading: false,
+        data: null,
+        error
+      }
+    }))
+  })),
+  on(AppActions.setUninstalled, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.UNINSTALLED
+    }))
+  })),
+  on(AppActions.setOutdated, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.OUTDATED
+    }))
+  })),
+  on(AppActions.updateApp, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.UPDATING,
+      updateProgress: 0
+    }))
+  })),
+  on(AppActions.setUpdateProgress, (state, { appId, updateProgress }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      updateProgress
+    }))
+  })),
+  on(AppActions.setUpToDate, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.UP_TO_DATE,
+      updateProgress: null
+    }))
+  })),
+  on(AppActions.setAppStarted, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      isStarting: false
+    }))
   })),
 );
 

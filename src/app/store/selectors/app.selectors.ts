@@ -13,6 +13,10 @@ export const getApps = createSelector(
   getUserState, state => state.apps ? state.apps.data : null
 );
 
+export const getLocalApps = createSelector(
+  getUserState, state => state.localApps
+);
+
 export const getSelectedApp_Store = createSelector(
   getUserState, state => (state.apps && state.apps.data) ? getApp(state.apps.data, state.selectedAppId_Store) : null
 );
