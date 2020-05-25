@@ -1,0 +1,25 @@
+@import '../../../../styles/colors';
+@import '../../../../styles/sizes';
+
+@import '../../../../styles/fonts/font-awesome';
+
+:host {
+  position: fixed;
+  top: $baseline;
+  right: $baseline;
+  display: flex;
+  flex-direction: row;
+
+  i {
+    font-size: 22px;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-white;
+    }
+
+    & + i {
+      margin-left: $baseline;
+    }
+  }
+}

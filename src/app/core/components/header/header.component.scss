@@ -29,27 +29,19 @@ nav {
   flex-grow: 1;
 
   a {
-    &, &:hover {
-      text-decoration: none;
-    }
+    margin-left: $baseline-2;
+    margin-right: $baseline-2;
+    color: $color-grey;
+    text-decoration: none;
 
-    &.active {
+    &:hover, &.active {
       color: $color-white;
-      border-bottom-color: pink;
     }
-  }
-}
-
-nav a, .right {
-  margin-left: $baseline-2;
-  margin-right: $baseline-2;
-  color: $color-grey;
-
-  &:hover {
-    color: $color-white;
   }
 }
 
 .right {
+  margin-right: $baseline * 10;
+  color: $color-white;
   cursor: pointer;
 }
