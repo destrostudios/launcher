@@ -1,15 +1,17 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
+import {AuthenticationComponent} from './pages/authentication/authentication.component';
 import {HomeComponent} from './pages/home/home.component';
 import {LibraryComponent} from './pages/library/library.component';
 import {OfflineComponent} from './pages/offline/offline.component';
-import {StartComponent} from './pages/start/start.component';
+import {SelfUpdateComponent} from './pages/self-update/self-update.component';
 import {StoreComponent} from './pages/store/store.component';
 import {StoreAppComponent} from './pages/store-app/store-app.component';
 
 const routes: Routes = [
-  { path: '', component: StartComponent },
+  { path: 'update', component: SelfUpdateComponent },
+  { path: 'authentication', component: AuthenticationComponent },
   { path: 'offline', component: OfflineComponent },
   { path: 'home', component: HomeComponent },
   { path: 'store', component: StoreComponent },

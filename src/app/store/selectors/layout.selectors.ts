@@ -13,7 +13,7 @@ const getRoute = createSelector(
 );
 
 export const isHeaderShown = createSelector(
-  getRoute, route => ((route !== '') && (route !== 'offline'))
+  getRoute, route => ((route !== 'update') && (route !== 'authentication') && (route !== 'offline'))
 );
 
 export const isLoginOrRegistrationShown = createSelector(

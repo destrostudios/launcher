@@ -3,14 +3,15 @@ import {Router} from '@angular/router';
 
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {TranslateService} from '@ngx-translate/core';
-import {EMPTY} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 
 import * as AppActions from '../actions/app.actions';
 import * as ConfigActions from '../actions/config.actions';
-import * as NewsActions from '../actions/news.actions';
-import * as UserActions from '../actions/user.actions';
 import * as LayoutActions from '../actions/layout.actions';
+import * as NewsActions from '../actions/news.actions';
+import * as SelfUpdateActions from '../actions/self-update.actions';
+import * as UserActions from '../actions/user.actions';
 
 @Injectable()
 export class LayoutEffects {
@@ -29,7 +30,27 @@ export class LayoutEffects {
     }),
   ));
 
-  navigateToOfflineWhenOffline = createEffect(() => this.actions.pipe(
+  navigateToOfflineWhenSelfUpdateError = createEffect(() => this.actions.pipe(
+    ofType(SelfUpdateActions.setDownloaded),
+    switchMap(({ isSelfUpdateDownloaded }) => {
+      if (!isSelfUpdateDownloaded) {
+        return of(LayoutActions.navigate({ route: 'offline' }));
+      }
+      return EMPTY;
+    }),
+  ));
+
+  navigateToAuthenticationWhenNoSelfUpdateAvailable = createEffect(() => this.actions.pipe(
+    ofType(SelfUpdateActions.setAvailable),
+    switchMap(({ isSelfUpdateAvailable }) => {
+      if (!isSelfUpdateAvailable) {
+        return of(LayoutActions.navigate({ route: 'authentication' }));
+      }
+      return EMPTY;
+    }),
+  ));
+
+  navigateToOfflineWhenCriticalApiError = createEffect(() => this.actions.pipe(
     ofType(
       ConfigActions.loadClientConfigsError,
       AppActions.loadAppsError,
@@ -44,9 +65,9 @@ export class LayoutEffects {
     map(() => LayoutActions.navigate({ route: 'home' })),
   ));
 
-  navigateToStartAfterLogout = createEffect(() => this.actions.pipe(
+  navigateToAuthenticationAfterLogout = createEffect(() => this.actions.pipe(
     ofType(UserActions.logout),
-    map(() => LayoutActions.navigate({ route: '' })),
+    map(() => LayoutActions.navigate({ route: 'authentication' })),
   ));
 
   showAppAdditionToAccountError = createEffect(() => this.actions.pipe(

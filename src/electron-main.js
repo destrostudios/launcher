@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
+const {autoUpdater} = require('electron-updater');
 const path = require('path');
 const url = require('url');
 
@@ -26,8 +27,12 @@ function createWindow() {
   );
 
   mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
+
+  mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 }
 
 app.on('ready', createWindow);
@@ -44,9 +49,15 @@ app.on('activate', () => {
   }
 });
 
+autoUpdater.on('update-available', () => mainWindow.webContents.send('selfUpdateAvailable'));
+autoUpdater.on('update-not-available', () => mainWindow.webContents.send('selfUpdateNotAvailable'));
+autoUpdater.on('update-downloaded', () => mainWindow.webContents.send('selfUpdateDownloaded'));
+autoUpdater.on('error', () => mainWindow.webContents.send('selfUpdateError'));
+
 const userDataPath = app.getPath('userData');
 ipcMain.on('minimizeWindow', () => mainWindow.minimize());
 ipcMain.on('closeWindow', () => mainWindow.close());
+ipcMain.on('restartAndInstall', () => autoUpdater.quitAndInstall());
 ipcMain.on('compareAppFiles', (event, app, appFiles) => compareAppFiles(event, app, appFiles, userDataPath));
 ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles) => updateAppFiles(event, app, outdatedAppFiles, userDataPath));
 ipcMain.on('startApp', (event, app) => startApp(event, app, userDataPath));

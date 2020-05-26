@@ -13,13 +13,14 @@ import {AppEffects} from '../store/effects/app.effects';
 import {ConfigEffects} from '../store/effects/config.effects';
 import {LayoutEffects} from '../store/effects/layout.effects';
 import {NewsEffects} from '../store/effects/news.effects';
+import {SelfUpdateEffects} from '../store/effects/self-update.effects';
 import {UserEffects} from '../store/effects/user.effects';
 import {appReducer} from '../store/reducers/app.reducers';
 import {configReducer} from '../store/reducers/config.reducers';
 import {layoutReducer} from '../store/reducers/layout.reducers';
 import {newsReducer} from '../store/reducers/news.reducers';
+import {selfUpdateReducer} from '../store/reducers/self-update.reducers';
 import {userReducer} from '../store/reducers/user.reducers';
-import {FullLoaderComponent} from './components/full-loader/full-loader.component';
 import {HeaderComponent} from './components/header/header.component';
 import {WindowControlsComponent} from './components/window-controls/window-controls.component';
 import {SessionIdInterceptor} from './interceptors/session-id/session-id.interceptor';
@@ -31,6 +32,7 @@ import {IpcService} from './services/ipc/ipc.service';
 import {LayoutStoreFacadeService} from './services/layout-store-facade/layout-store-facade.service';
 import {NewsHttpService} from './services/news-http/news-http.service';
 import {NewsStoreFacadeService} from './services/news-store-facade/news-store-facade.service';
+import {SelfUpdateStoreFacadeService} from './services/self-update-store-facade/self-update-store-facade.service';
 import {UserHttpService} from './services/user-http/user-http.service';
 import {UserStoreFacadeService} from './services/user-store-facade/user-store-facade.service';
 import {MASTERSERVER_URL} from './injection-tokens';
@@ -49,8 +51,16 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     StoreModule.forFeature('config', configReducer),
     StoreModule.forFeature('layout', layoutReducer),
     StoreModule.forFeature('news', newsReducer),
+    StoreModule.forFeature('selfUpdate', selfUpdateReducer),
     StoreModule.forFeature('user', userReducer),
-    EffectsModule.forRoot([ AppEffects, ConfigEffects, LayoutEffects, NewsEffects, UserEffects ]),
+    EffectsModule.forRoot([
+      AppEffects,
+      ConfigEffects,
+      LayoutEffects,
+      NewsEffects,
+      SelfUpdateEffects,
+      UserEffects
+    ]),
     StoreDevtoolsModule.instrument({ maxAge: 50 }),
 
     TranslateModule.forRoot({
@@ -64,7 +74,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     SharedModule,
   ],
   declarations: [
-    FullLoaderComponent,
     HeaderComponent,
     WindowControlsComponent,
   ],
@@ -77,6 +86,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     LayoutStoreFacadeService,
     NewsHttpService,
     NewsStoreFacadeService,
+    SelfUpdateStoreFacadeService,
     UserHttpService,
     UserStoreFacadeService,
 
@@ -91,7 +101,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     }
   ],
   exports: [
-    FullLoaderComponent,
     HeaderComponent,
     WindowControlsComponent
   ]

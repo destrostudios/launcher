@@ -13,13 +13,8 @@ import {
   getCurrentUser,
   getOwnedAppIds,
   isSaltClientLoading,
-  isSessionIdLoading,
-  isUserLoading,
+  isSessionIdLoading
 } from './user.selectors';
-
-export const isFullscreenLoaderShown = createSelector(
-  isUserLoading, () => false
-);
 
 export const isLoginLoading = createSelector(
   isSaltClientLoading, isSessionIdLoading, getCurrentUser, areClientConfigsLoading, areLatestNewsLoading, areAppsLoading,

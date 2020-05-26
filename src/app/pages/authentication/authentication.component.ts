@@ -8,11 +8,11 @@ import {PlainCredentials} from '../../model/plain-credentials.model';
 import {Registration} from '../../model/registration.model';
 
 @Component({
-  selector: 'ds-start',
-  templateUrl: './start.component.html',
-  styleUrls: ['./start.component.scss']
+  selector: 'ds-authentication',
+  templateUrl: './authentication.component.html',
+  styleUrls: ['./authentication.component.scss']
 })
-export class StartComponent implements OnInit {
+export class AuthenticationComponent implements OnInit {
 
   isLoginOrRegistrationShown: Observable<boolean>;
   isLoginLoading: Observable<boolean>;

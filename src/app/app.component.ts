@@ -15,7 +15,6 @@ import {NewsStoreFacadeService} from './core/services/news-store-facade/news-sto
 export class AppComponent implements OnInit {
 
   isHeaderShown: Observable<boolean>;
-  isFullscreenLoaderShown: Observable<boolean>;
 
   constructor(private translateService: TranslateService,
               private layoutStoreFacadeService: LayoutStoreFacadeService,
@@ -29,9 +28,8 @@ export class AppComponent implements OnInit {
     this.translateService.use('en');
 
     this.isHeaderShown = this.layoutStoreFacadeService.isHeaderShown();
-    this.isFullscreenLoaderShown = this.layoutStoreFacadeService.isFullscreenLoaderShown();
 
-    this.layoutStoreFacadeService.navigate('');
+    this.layoutStoreFacadeService.navigate('update');
     this.configStoreFacadeService.loadClientConfigs();
     this.appStoreFacadeService.loadApps();
     this.newsStoreFacadeService.loadLatestNews();

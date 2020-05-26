@@ -4,7 +4,6 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
 import * as LayoutActions from '../../../store/actions/layout.actions';
-import {isFullscreenLoaderShown} from '../../../store/selectors/aggregation.selectors';
 import {
   getLanguage,
   isAppAdditionToAccountErrorShown,
@@ -26,10 +25,6 @@ export class LayoutStoreFacadeService {
 
   isHeaderShown(): Observable<boolean> {
     return this.store.select(isHeaderShown);
-  }
-
-  isFullscreenLoaderShown(): Observable<boolean> {
-    return this.store.select(isFullscreenLoaderShown);
   }
 
   isLoginOrRegistrationShown(): Observable<boolean> {
