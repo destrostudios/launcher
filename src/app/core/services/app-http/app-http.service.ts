@@ -16,18 +16,18 @@ export class AppHttpService {
   ) { }
 
   getApps(): Observable<App[]> {
-    return this.httpClient.get<App[]>(this.masterserverUrl + '/api/apps');
+    return this.httpClient.get<App[]>(this.masterserverUrl + '/apps');
   }
 
   addToAccount(appId: number): Observable<void> {
-    return this.httpClient.get<void>(this.masterserverUrl + '/api/apps/' + appId + '/addToAccount');
+    return this.httpClient.get<void>(this.masterserverUrl + '/apps/' + appId + '/addToAccount');
   }
 
   removeFromAccount(appId: number): Observable<void> {
-    return this.httpClient.get<void>(this.masterserverUrl + '/api/apps/' + appId + '/removeFromAccount');
+    return this.httpClient.get<void>(this.masterserverUrl + '/apps/' + appId + '/removeFromAccount');
   }
 
   getAppFiles(appId: number): Observable<AppFile[]> {
-    return this.httpClient.get<AppFile[]>(this.masterserverUrl + '/api/apps/' + appId + '/files');
+    return this.httpClient.get<AppFile[]>(this.masterserverUrl + '/apps/' + appId + '/files');
   }
 }

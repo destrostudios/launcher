@@ -17,18 +17,18 @@ export class UserHttpService {
   ) { }
 
   register(registration: Registration): Observable<void> {
-    return this.httpClient.post<void>(this.masterserverUrl + '/api/users/register', registration);
+    return this.httpClient.post<void>(this.masterserverUrl + '/users/register', registration);
   }
 
   getSaltClient(login: string): Observable<string> {
-    return this.httpClient.post(this.masterserverUrl + '/api/users/saltClient', login, { responseType: 'text' });
+    return this.httpClient.post(this.masterserverUrl + '/users/saltClient', login, { responseType: 'text' });
   }
 
   login(safeCredentials: SafeCredentials): Observable<string> {
-    return this.httpClient.post(this.masterserverUrl + '/api/users/login', safeCredentials, { responseType: 'text' });
+    return this.httpClient.post(this.masterserverUrl + '/users/login', safeCredentials, { responseType: 'text' });
   }
 
   getUser(): Observable<User> {
-    return this.httpClient.get<User>(this.masterserverUrl + '/api/users/bySession');
+    return this.httpClient.get<User>(this.masterserverUrl + '/users/bySession');
   }
 }

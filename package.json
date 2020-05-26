@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dist": "ng build && npm run package",
+    "dist": "ng build --prod && npm run package",
     "package": "electron-builder build",
     "deploy": "npm run package && node deployment/scripts/upload.js"
   },

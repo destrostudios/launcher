@@ -57,7 +57,7 @@ function updateAppFiles(event, app, outdatedAppFiles, appDataPath) {
 
 function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex, finishedCallback, errorCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
-  const url = "http://localhost:8080/api/apps/file/" + appFile.id;
+  const url = "http://destrostudios.com:8080/apps/file/" + appFile.id;
   const localFilePath = getLocalFilePath(appDataPath, app, appFile.path);
   downloadFile(url, localFilePath, error => {
     if (error) {

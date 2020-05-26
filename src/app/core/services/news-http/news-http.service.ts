@@ -15,7 +15,7 @@ export class NewsHttpService {
   ) { }
 
   getLatestNews(limit: number): Observable<News[]> {
-    return this.httpClient.get<News[]>(this.masterserverUrl + '/api/news/latest', {
+    return this.httpClient.get<News[]>(this.masterserverUrl + '/news/latest', {
       params: {
         limit: String(limit)
       }

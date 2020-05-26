@@ -15,6 +15,6 @@ export class ConfigHttpService {
   ) { }
 
   getClientConfigs(): Observable<Configs> {
-    return this.httpClient.get<Configs>(this.masterserverUrl + '/api/config/client');
+    return this.httpClient.get<Configs>(this.masterserverUrl + '/config/client');
   }
 }
