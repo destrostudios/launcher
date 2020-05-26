@@ -14,7 +14,8 @@ const reducer = createReducer(
   initialState,
   on(SelfUpdateActions.setAvailable, (state, { isSelfUpdateAvailable }) => ({
     ...state,
-    isSelfUpdateAvailable
+    isSelfUpdateAvailable,
+    isSelfUpdateDownloaded: (isSelfUpdateAvailable ? false : null)
   })),
   on(SelfUpdateActions.setDownloaded, (state, { isSelfUpdateDownloaded }) => ({
     ...state,
