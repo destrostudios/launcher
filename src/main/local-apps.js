@@ -47,7 +47,12 @@ function getChecksumSha256(data) {
 }
 
 function updateAppFiles(event, app, outdatedAppFiles, appDataPath) {
-  downloadNextAppFile(app, outdatedAppFiles, appDataPath, 0, () => {
+  let totalBytesToDownload = getTotalBytes(outdatedAppFiles);
+  let totalBytesDownloaded = 0;
+  downloadNextAppFile(app, outdatedAppFiles, appDataPath, 0, downloadedBytes => {
+    totalBytesDownloaded += downloadedBytes;
+    event.reply('appFilesUpdateProgress', app.id, (totalBytesDownloaded / totalBytesToDownload));
+  }, () => {
     event.reply('appFilesUpdated', app.id);
   }, () => {
     console.error('Error while downloading app files of ' + app.name);
@@ -55,17 +60,25 @@ function updateAppFiles(event, app, outdatedAppFiles, appDataPath) {
   });
 }
 
-function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex, finishedCallback, errorCallback) {
+function getTotalBytes(appFiles) {
+  let totalBytes = 0;
+  appFiles.forEach(appFile => {
+    totalBytes += appFile.sizeBytes;
+  });
+  return totalBytes;
+}
+
+function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
   const url = "http://destrostudios.com:8080/apps/file/" + appFile.id;
   const localFilePath = getLocalFilePath(appDataPath, app, appFile.path);
-  downloadFile(url, localFilePath, error => {
+  downloadFile(url, localFilePath, downloadedBytesCallback, error => {
     if (error) {
       errorCallback();
     } else {
       const newFileIndex = (currentFileIndex + 1);
       if (newFileIndex < outdatedAppFiles.length) {
-        downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex + 1, finishedCallback);
+        downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex + 1, downloadedBytesCallback, finishedCallback);
       } else {
         finishedCallback();
       }
@@ -73,19 +86,22 @@ function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileInde
   })
 }
 
-function downloadFile(url, destination, callback) {
+function downloadFile(url, destination, downloadedBytesCallback, finishedCallback) {
   createDirectoryIfNotExisting(destination);
   const file = fs.createWriteStream(destination);
   console.log('Downloading file: "' + url + '" --> "' + destination + '"');
   http.get(url, response => {
-    response.pipe(file);
-    file.on('finish', () => {
-      file.close(callback);
+    response.on('data', chunk => {
+      file.write(chunk);
+      downloadedBytesCallback(chunk.length);
+    }).on('end', () => {
+      file.end();
+      finishedCallback(null);
+    }).on('error', error => {
+      fs.unlinkSync(destination);
+      finishedCallback(error.message);
     });
-  }).on('error', error => {
-    fs.unlink(destination);
-    callback(error.message);
-  });
+  })
 }
 
 function createDirectoryIfNotExisting(filePath) {

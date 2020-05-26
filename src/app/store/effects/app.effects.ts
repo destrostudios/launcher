@@ -27,6 +27,9 @@ export class AppEffects {
     this.ipcService.on('appFilesCompared', (event, appId, outdatedFileIds) => {
       this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFileIds }));
     });
+    this.ipcService.on('appFilesUpdateProgress', (event, appId, updateProgress) => {
+      this.appStore.dispatch(AppActions.setUpdateProgress({ appId, updateProgress }));
+    });
     this.ipcService.on('appFilesUpdated', (event, appId) => {
       this.appStore.dispatch(AppActions.setUpdateFinished({ appId }));
     });

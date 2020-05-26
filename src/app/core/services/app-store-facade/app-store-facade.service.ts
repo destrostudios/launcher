@@ -12,6 +12,7 @@ import {
   getLibrarySearchText,
   getSelectedApp_Library,
   getSelectedApp_Library_LocalVersion,
+  getSelectedApp_Library_UpdateProgressText,
   getSelectedApp_Store,
   isSomeLocalAppUpdating
 } from '../../../store/selectors/app.selectors';
@@ -49,6 +50,10 @@ export class AppStoreFacadeService {
 
   getSelectedApp_Library_LocalVersion(): Observable<LocalAppVersion> {
     return this.store.select(getSelectedApp_Library_LocalVersion);
+  }
+
+  getSelectedApp_Library_UpdateProgressText(): Observable<string> {
+    return this.store.select(getSelectedApp_Library_UpdateProgressText);
   }
 
   isSomeLocalAppUpdating(): Observable<boolean> {

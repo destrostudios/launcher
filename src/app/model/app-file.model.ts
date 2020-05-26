@@ -1,5 +1,6 @@
 export interface AppFile {
   readonly id: number;
   readonly path: string;
-  readonly checksumSha256: number;
+  readonly sizeBytes: number;
+  readonly checksumSha256: string;
 }

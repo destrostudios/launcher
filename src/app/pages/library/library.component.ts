@@ -21,6 +21,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
   displayedApps: Observable<App[]>;
   selectedApp: Observable<App>;
   selectedApp_LocalVersion: Observable<LocalAppVersion>;
+  selectedApp_UpdateProgressText: Observable<string>;
   isSomeLocalAppUpdating: Observable<boolean>;
 
   private subscriptions: Subscription[];
@@ -35,6 +36,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
     this.displayedApps = this.userStoreFacadeService.getDisplayedLibraryApps();
     this.selectedApp = this.appStoreFacadeService.getSelectedApp_Library();
     this.selectedApp_LocalVersion = this.appStoreFacadeService.getSelectedApp_Library_LocalVersion();
+    this.selectedApp_UpdateProgressText = this.appStoreFacadeService.getSelectedApp_Library_UpdateProgressText();
     this.isSomeLocalAppUpdating = this.appStoreFacadeService.isSomeLocalAppUpdating();
 
     this.subscriptions = [

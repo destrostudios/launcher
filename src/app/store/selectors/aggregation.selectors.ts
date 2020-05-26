@@ -5,7 +5,6 @@ import {
   areAppsLoading,
   getApps,
   getLibrarySearchText,
-  getSelectedApp_Library,
   getSelectedApp_Store
 } from './app.selectors';
 import {areClientConfigsLoading, getFeaturedAppId} from './config.selectors';

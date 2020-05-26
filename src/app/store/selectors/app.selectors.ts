@@ -43,6 +43,14 @@ export const getSelectedApp_Library_LocalVersion = createSelector(
   getSelectedApp_Library_LocalApp, localApp => localApp ? localApp.version : null
 );
 
+const getSelectedApp_Library_UpdateProgress = createSelector(
+  getSelectedApp_Library_LocalApp, localApp => localApp ? localApp.updateProgress : null
+);
+
+export const getSelectedApp_Library_UpdateProgressText = createSelector(
+  getSelectedApp_Library_UpdateProgress, updateProgress => ((updateProgress !== null) ? (100 * updateProgress).toFixed(1) + '%' : null)
+);
+
 export const getLibrarySearchText = createSelector(
   getUserState, state => state.librarySearchText
 );
