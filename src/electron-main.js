@@ -2,7 +2,7 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const url = require('url');
 
-const {compareAppFiles, startApp, updateAppFiles} = require('./src/main/local-apps');
+const {compareAppFiles, startApp, updateAppFiles} = require('./main/local-apps');
 
 let mainWindow;
 
@@ -19,7 +19,7 @@ function createWindow() {
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, '/dist/destrostudios-launcher/index.html'),
+      pathname: path.join(__dirname, '/index.html'),
       protocol: 'file:',
       slashes: true
     })

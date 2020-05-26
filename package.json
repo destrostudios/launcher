@@ -1,20 +1,32 @@
 {
-  "name": "destrostudios-launcher",
+  "name": "destrostudios",
   "version": "1.0.0",
-  "main": "main.js",
+  "description": "Destrostudios cross-game launcher, offering the possibility to login, download, update and start games.",
+  "author": "destrostudios",
   "license": "MIT",
+  "private": true,
   "scripts": {
-    "ng": "ng",
-    "start": "ng build --base-href ./ && npm run electron",
-    "start:prod": "ng build --prod --base-href ./ && npm run electron",
-    "electron": "electron .",
-    "build": "ng build",
+    "start": "ng build && npm run electron",
+    "electron": "electron ./build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "npm run build --prod && node deployment/scripts/upload.js"
+    "dist": "ng build && npm run package",
+    "package": "electron-builder build",
+    "deploy": "npm run package && node deployment/scripts/upload.js"
   },
-  "private": true,
+  "build": {
+    "directories": {
+      "buildResources": "build",
+      "app": "build"
+    },
+    "appId": "com.destrostudios.launcher",
+    "artifactName": "destrostudios-setup.${ext}",
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    }
+  },
   "dependencies": {
     "@angular/animations": "~8.2.14",
     "@angular/common": "~8.2.14",
@@ -47,6 +59,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "electron-builder": "^22.6.1",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
