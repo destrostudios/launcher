@@ -44,9 +44,9 @@ app.on('activate', () => {
   }
 });
 
-const appDataPath = app.getPath('appData');
+const userDataPath = app.getPath('userData');
 ipcMain.on('minimizeWindow', () => mainWindow.minimize());
 ipcMain.on('closeWindow', () => mainWindow.close());
-ipcMain.on('compareAppFiles', (event, app, appFiles) => compareAppFiles(event, app, appFiles, appDataPath));
-ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles) => updateAppFiles(event, app, outdatedAppFiles, appDataPath));
-ipcMain.on('startApp', (event, app) => startApp(event, app, appDataPath));
+ipcMain.on('compareAppFiles', (event, app, appFiles) => compareAppFiles(event, app, appFiles, userDataPath));
+ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles) => updateAppFiles(event, app, outdatedAppFiles, userDataPath));
+ipcMain.on('startApp', (event, app) => startApp(event, app, userDataPath));

@@ -4,9 +4,9 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 
-function compareAppFiles(event, app, appFiles, appDataPath) {
+function compareAppFiles(event, app, appFiles, userDataPath) {
   const outdatedFileIds = [];
-  compareNextAppFile(app, appFiles, appDataPath, 0, (appFile, isUpToDate) => {
+  compareNextAppFile(app, appFiles, userDataPath, 0, (appFile, isUpToDate) => {
     if (!isUpToDate) {
       outdatedFileIds.push(appFile.id);
     }
@@ -16,9 +16,9 @@ function compareAppFiles(event, app, appFiles, appDataPath) {
   });
 }
 
-function compareNextAppFile(app, appFiles, appDataPath, currentFileIndex, isUpToDateCallback, finishedCallback) {
+function compareNextAppFile(app, appFiles, userDataPath, currentFileIndex, isUpToDateCallback, finishedCallback) {
   const appFile = appFiles[currentFileIndex];
-  const localFilePath = getLocalFilePath(appDataPath, app, appFile.path);
+  const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
   fs.readFile(localFilePath, (error, data) => {
     let isUpToDate = false;
     if (!error) {
@@ -31,7 +31,7 @@ function compareNextAppFile(app, appFiles, appDataPath, currentFileIndex, isUpTo
 
     const newFileIndex = (currentFileIndex + 1);
     if (newFileIndex < appFiles.length) {
-      compareNextAppFile(app, appFiles, appDataPath, currentFileIndex + 1, isUpToDateCallback, finishedCallback);
+      compareNextAppFile(app, appFiles, userDataPath, currentFileIndex + 1, isUpToDateCallback, finishedCallback);
     } else {
       finishedCallback();
     }
@@ -46,10 +46,10 @@ function getChecksumSha256(data) {
     .toString('base64');
 }
 
-function updateAppFiles(event, app, outdatedAppFiles, appDataPath) {
+function updateAppFiles(event, app, outdatedAppFiles, userDataPath) {
   let totalBytesToDownload = getTotalBytes(outdatedAppFiles);
   let totalBytesDownloaded = 0;
-  downloadNextAppFile(app, outdatedAppFiles, appDataPath, 0, downloadedBytes => {
+  downloadNextAppFile(app, outdatedAppFiles, userDataPath, 0, downloadedBytes => {
     totalBytesDownloaded += downloadedBytes;
     event.reply('appFilesUpdateProgress', app.id, (totalBytesDownloaded / totalBytesToDownload));
   }, () => {
@@ -68,17 +68,17 @@ function getTotalBytes(appFiles) {
   return totalBytes;
 }
 
-function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
+function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
   const url = "http://destrostudios.com:8080/apps/file/" + appFile.id;
-  const localFilePath = getLocalFilePath(appDataPath, app, appFile.path);
+  const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
   downloadFile(url, localFilePath, downloadedBytesCallback, error => {
     if (error) {
       errorCallback();
     } else {
       const newFileIndex = (currentFileIndex + 1);
       if (newFileIndex < outdatedAppFiles.length) {
-        downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileIndex + 1, downloadedBytesCallback, finishedCallback);
+        downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex + 1, downloadedBytesCallback, finishedCallback);
       } else {
         finishedCallback();
       }
@@ -113,15 +113,15 @@ function createDirectoryIfNotExisting(filePath) {
   fs.mkdirSync(directory);
 }
 
-function startApp(event, app, appDataPath) {
-  const localAppDirectoryPath = getLocalFilePath(appDataPath, app, '');
+function startApp(event, app, userDataPath) {
+  const localAppDirectoryPath = getLocalFilePath(userDataPath, app, '');
   const executeCommand = 'cd "' + localAppDirectoryPath + '" & ' + app.executable;
   console.log('Starting "' + app.name + '": ' + executeCommand);
   childProcess.exec(executeCommand);
 }
 
-function getLocalFilePath(appDataPath, app, appFilePath) {
-  return appDataPath + '/destrostudios/' + app.name + '/' + appFilePath;
+function getLocalFilePath(userDataPath, app, appFilePath) {
+  return userDataPath + '/apps/' + app.name + '/' + appFilePath;
 }
 
 module.exports = { compareAppFiles, updateAppFiles, startApp };
