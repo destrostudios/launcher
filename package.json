@@ -1,6 +1,9 @@
 {
-  "name": "destrostudios-parent",
-  "version": "1.0.0",
+  "name": "destrostudios",
+  "version": "0.0.1",
+  "description": "Destrostudios cross-game launcher, offering the possibility to login, download, update and start games.",
+  "author": "destrostudios",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "start": "ng build && npm run electron",
