@@ -18,15 +18,19 @@ export class SelfUpdateEffects {
     private ipcService: IpcService
   ) {
     this.ipcService.on('selfUpdateAvailable', () => {
+      console.log('selfUpdateAvailable');
       this.selfUpdateStore.dispatch(SelfUpdateActions.setAvailable({ isSelfUpdateAvailable: true }));
     });
     this.ipcService.on('selfUpdateNotAvailable', () => {
+      console.log('selfUpdateNotAvailable');
       this.selfUpdateStore.dispatch(SelfUpdateActions.setAvailable({ isSelfUpdateAvailable: false }));
     });
     this.ipcService.on('selfUpdateDownloaded', () => {
+      console.log('selfUpdateDownloaded');
       this.selfUpdateStore.dispatch(SelfUpdateActions.setDownloaded({ isSelfUpdateDownloaded: true }));
     });
     this.ipcService.on('selfUpdateError', () => {
+      console.log('selfUpdateError');
       this.selfUpdateStore.dispatch(SelfUpdateActions.setDownloaded({ isSelfUpdateDownloaded: false }));
     });
   }

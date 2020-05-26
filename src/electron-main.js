@@ -9,6 +9,7 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
+    show: false,
     frame: false,
     width: 1280,
     height: 720,
@@ -30,7 +31,9 @@ function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.openDevTools();
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.show();
     autoUpdater.checkForUpdatesAndNotify();
   });
 }
