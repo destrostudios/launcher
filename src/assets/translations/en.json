@@ -3,7 +3,7 @@
   "AN_UNEXPECTED_ERROR_OCCURED": "An unexpected error occured",
   "ALL": "All",
   "BACK": "Back",
-  "CHECKING_UPDATE": "Prüfe Update...",
+  "CHECKING_UPDATE": "Checking update...",
   "FEATURED": "Featured",
   "FORGOT_PASSWORD": "Forgot your password?",
   "HOME": "Home",
@@ -21,6 +21,6 @@
   "STORE": "Store",
   "THERE_SEEMS_TO_BE_A_PROBLEM_WITH_OUR_SERVERS": "There seems to be a problem with our servers :(",
   "UPDATE": "Update",
-  "UPDATING": "Updaten...",
+  "UPDATING": "Updating...",
   "WRONG_PASSWORD": "Wrong password"
 }

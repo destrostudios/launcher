@@ -113,6 +113,12 @@ input[type=text], input[type=password], input[type=submit], textarea, button {
   padding-right: $baseline;
   border: 1px solid $color-grey;
   border-radius: 5px;
+
+  &:disabled {
+    &, &:hover {
+      color: $color-grey;
+    }
+  }
 }
 
 input[type=text], input[type=password], textarea {

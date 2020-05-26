@@ -8,4 +8,5 @@ export interface App {
   readonly genres: Genre[];
   readonly date: string;
   readonly description: string;
+  readonly executable: string;
 }
