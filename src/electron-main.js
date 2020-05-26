@@ -31,7 +31,6 @@ function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.openDevTools();
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
     autoUpdater.checkForUpdatesAndNotify();
