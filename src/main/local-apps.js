@@ -5,14 +5,14 @@ const http = require('http');
 const path = require('path');
 
 function compareAppFiles(event, app, appFiles, appDataPath) {
-  const outdatedFilePaths = [];
+  const outdatedFileIds = [];
   compareNextAppFile(app, appFiles, appDataPath, 0, (appFile, isUpToDate) => {
     if (!isUpToDate) {
-      outdatedFilePaths.push(appFile.path);
+      outdatedFileIds.push(appFile.id);
     }
   }, () => {
-    console.log('Comparison results "' + app.name + '": ' + outdatedFilePaths.length + ' outdated files');
-    event.reply('appFilesCompared', app.id, outdatedFilePaths);
+    console.log('Comparison results "' + app.name + '": ' + outdatedFileIds.length + ' outdated files');
+    event.reply('appFilesCompared', app.id, outdatedFileIds);
   });
 }
 
@@ -76,6 +76,7 @@ function downloadNextAppFile(app, outdatedAppFiles, appDataPath, currentFileInde
 function downloadFile(url, destination, callback) {
   createDirectoryIfNotExisting(destination);
   const file = fs.createWriteStream(destination);
+  console.log('Downloading file: "' + url + '" --> "' + destination + '"');
   http.get(url, response => {
     response.pipe(file);
     file.on('finish', () => {

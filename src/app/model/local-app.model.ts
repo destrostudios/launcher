@@ -6,7 +6,7 @@ export interface LocalApp {
   readonly appId: number;
   readonly files: HttpData<AppFile[]>;
   readonly version: LocalAppVersion;
-  readonly outdatedFilePaths: string[];
+  readonly outdatedFileIds: number[];
   readonly updateProgress: number;
   readonly isStarting: boolean;
 }

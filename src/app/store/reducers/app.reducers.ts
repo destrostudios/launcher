@@ -105,12 +105,13 @@ const reducer = createReducer(
       }
     }))
   })),
-  on(AppActions.setAppCompared, (state, { appId, outdatedFilePaths }) => ({
+  on(AppActions.setAppCompared, (state, { appId, outdatedFileIds }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
-      version: ((outdatedFilePaths.length > 0) ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
-      outdatedFilePaths
+      version: ((outdatedFileIds.length > 0) ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
+      isStarting: ((outdatedFileIds.length > 0) ? false : localApp.isStarting),
+      outdatedFileIds
     }))
   })),
   on(AppActions.updateApp, (state, { appId }) => ({
@@ -133,7 +134,7 @@ const reducer = createReducer(
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
       version: LocalAppVersion.UP_TO_DATE,
-      outdatedFilePaths: [],
+      outdatedFileIds: [],
       updateProgress: null
     }))
   })),

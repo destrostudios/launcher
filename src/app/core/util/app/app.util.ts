@@ -1,4 +1,5 @@
 import {App} from '../../../model/app.model';
+import {AppFile} from '../../../model/app-file.model';
 import {LocalApp} from '../../../model/local-app.model';
 
 export function getApp(apps: App[], id: number): App {
@@ -29,7 +30,7 @@ export function updateLocalApps(localApps: LocalApp[], appId: number, updatedLoc
       appId,
       files: null,
       version: null,
-      outdatedFilePaths: null,
+      outdatedFileIds: null,
       updateProgress: null,
       isStarting: false,
     };
@@ -39,4 +40,10 @@ export function updateLocalApps(localApps: LocalApp[], appId: number, updatedLoc
 
 export function getLocalApp(localApps: LocalApp[], appId: number): LocalApp {
   return localApps.find(localApp => localApp.appId === appId);
+}
+
+export function getOutdatedAppFiles(localApp: LocalApp): AppFile[] {
+  return localApp.outdatedFileIds.map(appFileId => {
+    return localApp.files.data.find(appFile => appFile.id === appFileId);
+  });
 }

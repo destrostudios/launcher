@@ -7,7 +7,7 @@ import {catchError, flatMap, map, switchMap, withLatestFrom} from 'rxjs/operator
 
 import {AppHttpService} from '../../core/services/app-http/app-http.service';
 import {IpcService} from '../../core/services/ipc/ipc.service';
-import {getApp, getLocalApp, getPreselectedApp} from '../../core/util/app/app.util';
+import {getApp, getLocalApp, getOutdatedAppFiles, getPreselectedApp} from '../../core/util/app/app.util';
 import {LocalAppVersion} from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
@@ -24,8 +24,8 @@ export class AppEffects {
     private appHttpService: AppHttpService,
     private ipcService: IpcService,
   ) {
-    this.ipcService.on('appFilesCompared', (event, appId, outdatedFilePaths) => {
-      this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFilePaths }));
+    this.ipcService.on('appFilesCompared', (event, appId, outdatedFileIds) => {
+      this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFileIds }));
     });
     this.ipcService.on('appFilesUpdated', (event, appId) => {
       this.appStore.dispatch(AppActions.setUpdateFinished({ appId }));
@@ -77,7 +77,8 @@ export class AppEffects {
     switchMap(([{ appId }, apps, localApps]) => {
       const app = getApp(apps, appId);
       const localApp = getLocalApp(localApps, appId);
-      this.ipcService.send('updateAppFiles', app, localApp.files.data);
+      const outdatedFiles = getOutdatedAppFiles(localApp);
+      this.ipcService.send('updateAppFiles', app, outdatedFiles);
       return EMPTY;
     })
   ));

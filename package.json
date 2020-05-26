@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start": "ng build && npm run electron",
+    "start:prod": "ng build --prod && npm run electron",
     "electron": "electron ./build",
     "test": "ng test",
     "lint": "ng lint",
