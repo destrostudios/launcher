@@ -1,4 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
+const isDev = require('electron-is-dev');
 const {autoUpdater} = require('electron-updater');
 const path = require('path');
 const url = require('url');
@@ -33,7 +34,12 @@ function createWindow() {
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
-    autoUpdater.checkForUpdatesAndNotify();
+
+    if (isDev) {
+      mainWindow.webContents.send('selfUpdateNotAvailable');
+    } else {
+      autoUpdater.checkForUpdates();
+    }
   });
 }
 
