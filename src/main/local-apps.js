@@ -70,7 +70,7 @@ function getTotalBytes(appFiles) {
 
 function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
-  const url = "https://destrostudios.com:8080/apps/file/" + appFile.id;
+  const url = 'https://destrostudios.com' + getAppFilePath(app, appFile);
   const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
   downloadFile(url, localFilePath, downloadedBytesCallback, error => {
     if (error) {
@@ -121,7 +121,11 @@ function startApp(event, app, userDataPath) {
 }
 
 function getLocalFilePath(userDataPath, app, appFilePath) {
-  return userDataPath + '/apps/' + app.name + '/' + appFilePath;
+  return userDataPath + getAppFilePath(app, appFilePath);
+}
+
+function getAppFilePath(app, appFilePath) {
+  return '/apps/' + app.name + '/' + appFilePath;
 }
 
 module.exports = { compareAppFiles, updateAppFiles, startApp };
