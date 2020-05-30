@@ -1,7 +1,7 @@
 const childProcess = require("child_process");
 const crypto = require('crypto');
 const fs = require('fs');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 
 function compareAppFiles(event, app, appFiles, userDataPath) {
@@ -70,7 +70,7 @@ function getTotalBytes(appFiles) {
 
 function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
-  const url = 'https://destrostudios.com' + getAppFilePath(app, appFile);
+  const url = 'https://destrostudios.com' + getAppFilePath(app, appFile.path);
   const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
   downloadFile(url, localFilePath, downloadedBytesCallback, error => {
     if (error) {
@@ -90,7 +90,7 @@ function downloadFile(url, destination, downloadedBytesCallback, finishedCallbac
   createDirectoryIfNotExisting(destination);
   const file = fs.createWriteStream(destination);
   console.log('Downloading file: "' + url + '" --> "' + destination + '"');
-  http.get(url, response => {
+  https.get(url, response => {
     response.on('data', chunk => {
       file.write(chunk);
       downloadedBytesCallback(chunk.length);
