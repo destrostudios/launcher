@@ -3,16 +3,14 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import * as bcrypt from 'bcryptjs';
-import {EMPTY, of} from 'rxjs';
-import {map, catchError, switchMap, withLatestFrom} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {map, catchError, switchMap} from 'rxjs/operators';
 
 import {AppHttpService} from '../../core/services/app-http/app-http.service';
 import {UserHttpService} from '../../core/services/user-http/user-http.service';
-import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
 import {AppState} from '../state/app-state.model';
 import {UserState} from '../state/user-state.model';
-import {getOwnedApps} from '../selectors/aggregation.selectors';
 
 @Injectable()
 export class UserEffects {
@@ -98,6 +96,14 @@ export class UserEffects {
     switchMap(({ appId }) => this.appHttpService.removeFromAccount(appId).pipe(
       map(() => UserActions.removeAppFromAccountSuccessful()),
       catchError(error => of(UserActions.removeAppFromAccountError({ error })))
+    ))
+  ));
+
+  loadAuthToken = createEffect(() => this.actions.pipe(
+    ofType(UserActions.loadAuthToken),
+    switchMap(() => this.userHttpService.getAuthToken().pipe(
+      map(authToken => UserActions.loadAuthTokenSuccessful({ authToken })),
+      catchError(error => of(UserActions.loadAuthTokenError({ error })))
     ))
   ));
 }

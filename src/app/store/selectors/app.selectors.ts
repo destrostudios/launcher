@@ -54,3 +54,12 @@ export const getSelectedApp_Library_UpdateProgressText = createSelector(
 export const getLibrarySearchText = createSelector(
   getUserState, state => state.librarySearchText
 );
+
+export const getStartingAppId = createSelector(
+  getUserState, state => state.startingAppId
+);
+
+export const getSelectedApp_Library_IsStarting = createSelector(
+  getSelectedApp_Library, getStartingAppId,
+  (selectedApp_Library, startingAppId) => (selectedApp_Library && (selectedApp_Library.id === startingAppId))
+);

@@ -9,4 +9,5 @@ export interface UserState {
   readonly currentUser: User;
   readonly appAdditionToAccount: HttpData<void>;
   readonly appRemovalFromAccount: HttpData<void>;
+  readonly authToken: HttpData<string>;
 }

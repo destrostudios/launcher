@@ -25,4 +25,7 @@ export const addAppToAccountError = createAction('[User] Add app to account erro
 export const removeAppFromAccount = createAction('[User] Remove app from account', props<{ appId: number }>());
 export const removeAppFromAccountSuccessful = createAction('[User] Remove app from account successful');
 export const removeAppFromAccountError = createAction('[User] Remove app from account error', props<{ error: any }>());
+export const loadAuthToken = createAction('[User] Load auth token');
+export const loadAuthTokenSuccessful = createAction('[User] Load auth token successful', props<{ authToken: string }>());
+export const loadAuthTokenError = createAction('[User] Load auth token error', props<{ error: any }>());
 // tslint:enable:max-line-length

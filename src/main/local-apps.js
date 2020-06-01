@@ -52,11 +52,14 @@ function updateAppFiles(event, app, outdatedAppFiles, userDataPath) {
   downloadNextAppFile(app, outdatedAppFiles, userDataPath, 0, downloadedBytes => {
     totalBytesDownloaded += downloadedBytes;
     event.reply('appFilesUpdateProgress', app.id, (totalBytesDownloaded / totalBytesToDownload));
-  }, () => {
-    event.reply('appFilesUpdated', app.id);
-  }, () => {
-    console.error('Error while downloading app files of ' + app.name);
-    event.reply('appFilesUpdateError', app.id);
+  }, error => {
+    if (error) {
+      console.error('Error while downloading app files of ' + app.name + ':');
+      console.error(error);
+      event.reply('appFilesUpdateError', app.id, error);
+    } else {
+      event.reply('appFilesUpdated', app.id);
+    }
   });
 }
 
@@ -68,13 +71,13 @@ function getTotalBytes(appFiles) {
   return totalBytes;
 }
 
-function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback, errorCallback) {
+function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback) {
   const appFile = outdatedAppFiles[currentFileIndex];
   const url = 'https://destrostudios.com' + getAppFilePath(app, appFile.path);
   const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
   downloadFile(url, localFilePath, downloadedBytesCallback, error => {
     if (error) {
-      errorCallback();
+      finishedCallback(error);
     } else {
       const newFileIndex = (currentFileIndex + 1);
       if (newFileIndex < outdatedAppFiles.length) {
@@ -97,11 +100,12 @@ function downloadFile(url, destination, downloadedBytesCallback, finishedCallbac
     }).on('end', () => {
       file.end();
       finishedCallback(null);
-    }).on('error', error => {
-      fs.unlinkSync(destination);
+    });
+  }).on('error', error => {
+    fs.unlink(destination, () => {
       finishedCallback(error.message);
     });
-  })
+  });
 }
 
 function createDirectoryIfNotExisting(filePath) {
@@ -113,9 +117,9 @@ function createDirectoryIfNotExisting(filePath) {
   fs.mkdirSync(directory);
 }
 
-function startApp(event, app, userDataPath) {
+function startApp(event, app, authToken, userDataPath) {
   const localAppDirectoryPath = getLocalFilePath(userDataPath, app, '');
-  const executeCommand = 'cd "' + localAppDirectoryPath + '" & ' + app.executable;
+  const executeCommand = 'cd "' + localAppDirectoryPath + '" & ' + app.executable + ' ' + authToken;
   console.log('Starting "' + app.name + '": ' + executeCommand);
   childProcess.exec(executeCommand);
 }

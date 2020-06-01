@@ -12,7 +12,7 @@ import {LocalAppVersion} from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
 import {getDisplayedLibraryApps} from '../selectors/aggregation.selectors';
-import {getApps, getLocalApps, getSelectedApp_Library} from '../selectors/app.selectors';
+import {getApps, getLocalApps, getSelectedApp_Library, getStartingAppId} from '../selectors/app.selectors';
 import {AppState} from '../state/app-state.model';
 
 @Injectable()
@@ -29,6 +29,11 @@ export class AppEffects {
     });
     this.ipcService.on('appFilesUpdateProgress', (event, appId, updateProgress) => {
       this.appStore.dispatch(AppActions.setUpdateProgress({ appId, updateProgress }));
+    });
+    this.ipcService.on('appFilesUpdateError', (event, appId, error) => {
+      // TODO: Store and display error
+      console.error(error);
+      this.appStore.dispatch(AppActions.setUpdateError({ appId }));
     });
     this.ipcService.on('appFilesUpdated', (event, appId) => {
       this.appStore.dispatch(AppActions.setUpdateFinished({ appId }));
@@ -61,6 +66,17 @@ export class AppEffects {
     ))
   ));
 
+  cancelAppStartOnLoadingAppFilesError = createEffect(() => this.actions.pipe(
+    ofType(AppActions.loadAppFilesError),
+    withLatestFrom(this.appStore.select(getStartingAppId)),
+    switchMap(([{ appId }, startingAppId]) => {
+      if (appId === startingAppId) {
+        return of(AppActions.setAppNotStarting());
+      }
+      return EMPTY;
+    })
+  ));
+
   compareLocalAppFilesToAppFiles = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadAppFilesSuccessful),
     withLatestFrom(this.appStore.select(getApps)),
@@ -86,19 +102,49 @@ export class AppEffects {
     })
   ));
 
+  cancelAppStartWhenNotUpToDate = createEffect(() => this.actions.pipe(
+    ofType(AppActions.setAppCompared),
+    withLatestFrom(this.appStore.select(getStartingAppId)),
+    switchMap(([{ appId, outdatedFileIds }, startingAppId]) => {
+      if ((appId === startingAppId) && (outdatedFileIds.length > 0)) {
+        return of(AppActions.setAppNotStarting());
+      }
+      return EMPTY;
+    })
+  ));
+
   allowAppStartWhenUpToDate = createEffect(() => this.actions.pipe(
     ofType(AppActions.setAppCompared, AppActions.setUpdateFinished),
     withLatestFrom(
-      this.appStore.select(getApps),
-      this.appStore.select(getLocalApps),
+      this.appStore.select(getStartingAppId),
+      this.appStore.select(getLocalApps)
     ),
-    switchMap(([{ appId }, apps, localApps]) => {
-      const localApp = getLocalApp(localApps, appId);
-      if ((localApp.version === LocalAppVersion.UP_TO_DATE) && localApp.isStarting) {
-        const app = getApp(apps, appId);
-        this.ipcService.send('startApp', app);
+    switchMap(([{ appId }, startingAppId, localApps]) => {
+      if (appId === startingAppId) {
+        const localApp = getLocalApp(localApps, appId);
+        if (localApp.version === LocalAppVersion.UP_TO_DATE) {
+          return of(UserActions.loadAuthToken());
+        }
       }
       return EMPTY;
+    })
+  ));
+
+  cancelAppStartOnLoadingAuthTokenError = createEffect(() => this.actions.pipe(
+    ofType(UserActions.loadAuthTokenError),
+    map(() => AppActions.setAppNotStarting())
+  ));
+
+  executeStartingAppWithAuthToken = createEffect(() => this.actions.pipe(
+    ofType(UserActions.loadAuthTokenSuccessful),
+    withLatestFrom(
+      this.appStore.select(getStartingAppId),
+      this.appStore.select(getApps)
+    ),
+    map(([{ authToken }, startingAppId, apps]) => {
+      const app = getApp(apps, startingAppId);
+      this.ipcService.send('startApp', app, authToken);
+      return AppActions.setAppNotStarting();
     })
   ));
 

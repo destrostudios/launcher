@@ -12,7 +12,8 @@ const initialState: UserState = {
   user: null,
   currentUser: null,
   appAdditionToAccount: null,
-  appRemovalFromAccount: null
+  appRemovalFromAccount: null,
+  authToken: null
 };
 
 const reducer = createReducer(
@@ -169,6 +170,30 @@ const reducer = createReducer(
       error
     }
   })),
+  on(UserActions.loadAuthToken, state => ({
+    ...state,
+    authToken: {
+      isLoading: true,
+      data: null,
+      error: null
+    }
+  })),
+  on(UserActions.loadAuthTokenSuccessful, (state, { authToken }) => ({
+    ...state,
+    authToken: {
+      isLoading: false,
+      data: authToken,
+      error: null
+    }
+  })),
+  on(UserActions.loadAuthTokenError, (state, { error }) => ({
+    ...state,
+    authToken: {
+      isLoading: false,
+      data: null,
+      error
+    }
+  }))
 );
 
 // @ts-ignore

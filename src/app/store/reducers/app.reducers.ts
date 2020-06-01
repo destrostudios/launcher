@@ -12,7 +12,8 @@ const initialState: AppState = {
   localApps: null,
   selectedAppId_Store: null,
   selectedAppId_Library: null,
-  librarySearchText: ''
+  librarySearchText: '',
+  startingAppId: null
 };
 
 const reducer = createReducer(
@@ -66,10 +67,11 @@ const reducer = createReducer(
   })),
   on(AppActions.startApp, (state, { appId }) => ({
     ...state,
-    localApps: updateLocalApps(state.localApps, appId, localApp => ({
-      ...localApp,
-      isStarting: true
-    }))
+    startingAppId: appId
+  })),
+  on(AppActions.setAppNotStarting, state => ({
+    ...state,
+    startingAppId: null
   })),
   on(AppActions.loadAppFiles, (state, { appId }) => ({
     ...state,
@@ -110,9 +112,8 @@ const reducer = createReducer(
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
       version: ((outdatedFileIds.length > 0) ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
-      isStarting: ((outdatedFileIds.length > 0) ? false : localApp.isStarting),
       outdatedFileIds
-    }))
+    })),
   })),
   on(AppActions.updateApp, (state, { appId }) => ({
     ...state,
@@ -129,6 +130,14 @@ const reducer = createReducer(
       updateProgress
     }))
   })),
+  on(AppActions.setUpdateError, (state, { appId }) => ({
+    ...state,
+    localApps: updateLocalApps(state.localApps, appId, localApp => ({
+      ...localApp,
+      version: LocalAppVersion.OUTDATED,
+      updateProgress: null
+    }))
+  })),
   on(AppActions.setUpdateFinished, (state, { appId }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
@@ -136,13 +145,6 @@ const reducer = createReducer(
       version: LocalAppVersion.UP_TO_DATE,
       outdatedFileIds: [],
       updateProgress: null
-    }))
-  })),
-  on(AppActions.setAppStarted, (state, { appId }) => ({
-    ...state,
-    localApps: updateLocalApps(state.localApps, appId, localApp => ({
-      ...localApp,
-      isStarting: false
     }))
   })),
 );

@@ -18,11 +18,12 @@
     </div>
     <div class="app">
       <ds-app-hub *ngIf="selectedApp | async as selectedApp" [app]="selectedApp">
-        <button
+        <ds-spinner-button
           *ngIf="(selectedApp_LocalVersion | async) === LocalAppVersion.UP_TO_DATE"
-          translate="PLAY"
-          (click)="startApp(selectedApp.id)"
-        ></button>
+          text="PLAY"
+          [isLoading]="selectedApp_IsStarting | async"
+          (action)="startApp(selectedApp.id)"
+        ></ds-spinner-button>
         <button
           *ngIf="(selectedApp_LocalVersion | async) !== LocalAppVersion.UP_TO_DATE"
           [disabled]="((selectedApp_LocalVersion | async) !== LocalAppVersion.OUTDATED) || (isSomeLocalAppUpdating | async)"

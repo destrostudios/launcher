@@ -31,8 +31,7 @@ export function updateLocalApps(localApps: LocalApp[], appId: number, updatedLoc
       files: null,
       version: null,
       outdatedFileIds: null,
-      updateProgress: null,
-      isStarting: false,
+      updateProgress: null
     };
   }
   return [ ...otherLocalApps, updatedLocalApp(currentLocalApp) ];

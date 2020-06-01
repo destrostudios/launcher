@@ -8,5 +8,4 @@ export interface LocalApp {
   readonly version: LocalAppVersion;
   readonly outdatedFileIds: number[];
   readonly updateProgress: number;
-  readonly isStarting: boolean;
 }

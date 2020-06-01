@@ -8,4 +8,5 @@ export interface AppState {
   readonly selectedAppId_Store: number;
   readonly selectedAppId_Library: number;
   readonly librarySearchText: string;
+  readonly startingAppId: number;
 }

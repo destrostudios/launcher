@@ -31,4 +31,8 @@ export class UserHttpService {
   getUser(): Observable<User> {
     return this.httpClient.get<User>(this.masterserverUrl + '/users/bySession');
   }
+
+  getAuthToken(): Observable<string> {
+    return this.httpClient.get(this.masterserverUrl + '/authToken', { responseType: 'text' });
+  }
 }
