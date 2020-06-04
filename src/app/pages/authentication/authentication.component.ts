@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {AppStoreFacadeService} from '../../core/services/app-store-facade/app-store-facade.service';
+import {BackgroundService} from '../../core/services/background/background.service';
 import {ConfigStoreFacadeService} from '../../core/services/config-store-facade/config-store-facade.service';
 import {LayoutStoreFacadeService} from '../../core/services/layout-store-facade/layout-store-facade.service';
 import {NewsStoreFacadeService} from '../../core/services/news-store-facade/news-store-facade.service';
@@ -28,7 +29,8 @@ export class AuthenticationComponent implements OnInit {
               private userStoreFacadeService: UserStoreFacadeService,
               private configStoreFacadeService: ConfigStoreFacadeService,
               private appStoreFacadeService: AppStoreFacadeService,
-              private newsStoreFacadeService: NewsStoreFacadeService) {
+              private newsStoreFacadeService: NewsStoreFacadeService,
+              private backgroundService: BackgroundService) {
   }
 
   ngOnInit(): void {
@@ -38,7 +40,7 @@ export class AuthenticationComponent implements OnInit {
     this.loginErrorMessage = this.userStoreFacadeService.getLoginErrorMessage();
     this.registrationErrorMessage = this.userStoreFacadeService.getRegistrationErrorMessage();
 
-    document.body.style.backgroundImage = 'url(\'assets/images/background.png\')';
+    this.backgroundService.reset();
 
     this.configStoreFacadeService.loadClientConfigs();
     this.appStoreFacadeService.loadApps();

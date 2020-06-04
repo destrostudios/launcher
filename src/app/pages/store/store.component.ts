@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from 'rxjs';
 
 import {AppStoreFacadeService} from '../../core/services/app-store-facade/app-store-facade.service';
+import {BackgroundService} from '../../core/services/background/background.service';
 import {App} from '../../model/app.model';
 
 @Component({
@@ -21,7 +22,8 @@ export class StoreComponent implements OnInit, OnDestroy {
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private appStoreFacadeService: AppStoreFacadeService) {
+              private appStoreFacadeService: AppStoreFacadeService,
+              private backgroundService: BackgroundService) {
   }
 
   ngOnInit(): void {
@@ -29,11 +31,9 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.apps = this.appStoreFacadeService.getApps();
     this.selectedApp = this.appStoreFacadeService.getSelectedApp_Store();
 
-    document.body.style.backgroundImage = 'url(\'assets/images/background_' + 1 + '.png\')';
-
     this.subscriptions = [
       this.featuredApp.subscribe(featuredApp => {
-        document.body.style.backgroundImage = 'url(\'assets/images/background' + (featuredApp ? '_' + featuredApp.id : '') + '.png\')';
+        this.backgroundService.setApp(featuredApp);
       }),
       this.selectedApp.subscribe(selectedApp => {
         if (selectedApp && (!this.activatedRoute.snapshot.params.appId)) {

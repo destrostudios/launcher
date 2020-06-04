@@ -26,6 +26,7 @@ import {WindowControlsComponent} from './components/window-controls/window-contr
 import {SessionIdInterceptor} from './interceptors/session-id/session-id.interceptor';
 import {AppHttpService} from './services/app-http/app-http.service';
 import {AppStoreFacadeService} from './services/app-store-facade/app-store-facade.service';
+import {BackgroundService} from './services/background/background.service';
 import {ConfigHttpService} from './services/config-http/config-http.service';
 import {ConfigStoreFacadeService} from './services/config-store-facade/config-store-facade.service';
 import {IpcService} from './services/ipc/ipc.service';
@@ -80,6 +81,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   providers: [
     AppHttpService,
     AppStoreFacadeService,
+    BackgroundService,
     ConfigHttpService,
     ConfigStoreFacadeService,
     IpcService,

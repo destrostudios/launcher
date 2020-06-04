@@ -3,6 +3,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 
 import {AppStoreFacadeService} from '../../core/services/app-store-facade/app-store-facade.service';
+import {BackgroundService} from '../../core/services/background/background.service';
 import {UserStoreFacadeService} from '../../core/services/user-store-facade/user-store-facade.service';
 import {App} from '../../model/app.model';
 import {LocalAppVersion} from '../../model/local-app-version.enum';
@@ -28,7 +29,8 @@ export class LibraryComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[];
 
   constructor(private appStoreFacadeService: AppStoreFacadeService,
-              private userStoreFacadeService: UserStoreFacadeService) {
+              private userStoreFacadeService: UserStoreFacadeService,
+              private backgroundService: BackgroundService) {
   }
 
   ngOnInit(): void {
@@ -43,7 +45,7 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
     this.subscriptions = [
       this.selectedApp.subscribe(selectedApp => {
-        document.body.style.backgroundImage = 'url(\'assets/images/background' + (selectedApp ? '_' + selectedApp.id : '') + '.png\')';
+        this.backgroundService.setApp(selectedApp);
       }),
     ];
   }

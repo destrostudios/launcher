@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 
 import {Observable} from 'rxjs';
 
+import {BackgroundService} from '../../core/services/background/background.service';
 import {LayoutStoreFacadeService} from '../../core/services/layout-store-facade/layout-store-facade.service';
 import {NewsStoreFacadeService} from '../../core/services/news-store-facade/news-store-facade.service';
 import {News} from '../../model/news.model';
@@ -19,14 +20,15 @@ export class HomeComponent implements OnInit {
   language: Observable<string>;
 
   constructor(private newsStoreFacadeService: NewsStoreFacadeService,
-              private layoutStoreFacadeService: LayoutStoreFacadeService) {
+              private layoutStoreFacadeService: LayoutStoreFacadeService,
+              private backgroundService: BackgroundService) {
   }
 
   ngOnInit(): void {
     this.latestNews = this.newsStoreFacadeService.getLatestNews();
     this.language = this.layoutStoreFacadeService.getLanguage();
 
-    document.body.style.backgroundImage = 'url(\'assets/images/background.png\')';
+    this.backgroundService.reset();
   }
 
   setLanguage(language: string): void {
