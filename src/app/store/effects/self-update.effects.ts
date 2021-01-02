@@ -37,5 +37,5 @@ export class SelfUpdateEffects {
       this.ipcService.send('restartAndInstall');
       return EMPTY;
     })
-  ));
+  ), { dispatch: false });
 }

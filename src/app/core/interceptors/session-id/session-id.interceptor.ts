@@ -7,7 +7,7 @@ import {
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {first, flatMap} from 'rxjs/operators';
+import {first, mergeMap} from 'rxjs/operators';
 
 import {UserStoreFacadeService} from '../../services/user-store-facade/user-store-facade.service';
 
@@ -20,7 +20,7 @@ export class SessionIdInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.userStoreFacadeService.getSessionId().pipe(
       first(),
-      flatMap(sessionId => {
+      mergeMap(sessionId => {
         if (sessionId != null) {
           request = request.clone({
             setHeaders: {

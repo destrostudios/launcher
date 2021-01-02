@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {EMPTY, of} from 'rxjs';
-import {catchError, flatMap, map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, mergeMap, map, switchMap, withLatestFrom} from 'rxjs/operators';
 
 import {AppHttpService} from '../../core/services/app-http/app-http.service';
 import {IpcService} from '../../core/services/ipc/ipc.service';
@@ -60,7 +60,7 @@ export class AppEffects {
 
   loadAppFiles = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadAppFiles),
-    flatMap(({ appId }) => this.appHttpService.getAppFiles(appId).pipe(
+    mergeMap(({ appId }) => this.appHttpService.getAppFiles(appId).pipe(
       map(appFiles => AppActions.loadAppFilesSuccessful({ appId, appFiles })),
       catchError(error => of(AppActions.loadAppFilesError({ appId, error })))
     ))
@@ -85,7 +85,7 @@ export class AppEffects {
       this.ipcService.send('compareAppFiles', app, appFiles);
       return EMPTY;
     })
-  ));
+  ), { dispatch: false });
 
   updateApp = createEffect(() => this.actions.pipe(
     ofType(AppActions.updateApp),
@@ -100,7 +100,7 @@ export class AppEffects {
       this.ipcService.send('updateAppFiles', app, outdatedFiles);
       return EMPTY;
     })
-  ));
+  ), { dispatch: false });
 
   cancelAppStartWhenNotUpToDate = createEffect(() => this.actions.pipe(
     ofType(AppActions.setAppCompared),

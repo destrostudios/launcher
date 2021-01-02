@@ -28,7 +28,7 @@ export class LayoutEffects {
       this.translateService.use(language);
       return EMPTY;
     }),
-  ));
+  ), { dispatch: false });
 
   navigateToOfflineWhenSelfUpdateError = createEffect(() => this.actions.pipe(
     ofType(SelfUpdateActions.setDownloaded),
@@ -86,5 +86,5 @@ export class LayoutEffects {
       this.router.navigate([route]);
       return EMPTY;
     }),
-  ));
+  ), { dispatch: false });
 }
