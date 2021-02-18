@@ -4,7 +4,7 @@
     <div class="featured-title">{{featuredApp.name}}</div>
   </a>
   <div class="container">
-    <h1 translate="ALL"></h1>
+    <h1>{{ ('ALL' | translate) + ': ' }}</h1>
     <div class="all">
       <a *ngFor="let app of (apps | async)"
         [routerLink]="'/store/' + app.id">
