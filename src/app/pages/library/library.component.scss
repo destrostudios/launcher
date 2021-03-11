@@ -13,9 +13,15 @@ main {
 
 .apps {
   flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
 
   input {
     margin-bottom: $baseline-2;
+  }
+
+  ul {
+    overflow-y: auto;
   }
 
   li {
