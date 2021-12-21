@@ -28,7 +28,7 @@ export class StoreComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.featuredApp = this.appStoreFacadeService.getFeaturedApp();
-    this.apps = this.appStoreFacadeService.getApps();
+    this.apps = this.appStoreFacadeService.getStoreApps();
     this.selectedApp = this.appStoreFacadeService.getSelectedApp_Store();
 
     this.subscriptions = [

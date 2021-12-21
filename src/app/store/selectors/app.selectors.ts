@@ -22,6 +22,16 @@ export const isSomeLocalAppUpdating = createSelector(
   getLocalApps, localApps => localApps ? localApps.some(localApp => localApp.version === LocalAppVersion.UPDATING) : null
 );
 
+export const isDisplayHiddenAppsInStore = createSelector(
+  getUserState, state => state.displayHiddenAppsInStore
+);
+
+export const getStoreApps = createSelector(
+  getApps, isDisplayHiddenAppsInStore, (apps, displayHiddenAppsInStore) => {
+    return (displayHiddenAppsInStore ? apps : apps.filter(app => !app.hidden));
+  }
+);
+
 export const getSelectedApp_Store = createSelector(
   getUserState, state => (state.apps && state.apps.data) ? getApp(state.apps.data, state.selectedAppId_Store) : null
 );

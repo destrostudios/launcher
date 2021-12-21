@@ -8,13 +8,13 @@ import {LocalAppVersion} from '../../../model/local-app-version.enum';
 import * as AppActions from '../../../store/actions/app.actions';
 import {getFeaturedApp, isSelectedAppOwned_Store} from '../../../store/selectors/aggregation.selectors';
 import {
-  getApps,
   getLibrarySearchText,
   getSelectedApp_Library,
   getSelectedApp_Library_IsStarting,
   getSelectedApp_Library_LocalVersion,
   getSelectedApp_Library_UpdateProgressText,
   getSelectedApp_Store,
+  getStoreApps,
   isSomeLocalAppUpdating
 } from '../../../store/selectors/app.selectors';
 import {AppState} from '../../../store/state/app-state.model';
@@ -29,8 +29,8 @@ export class AppStoreFacadeService {
     return this.store.select(getFeaturedApp);
   }
 
-  getApps(): Observable<App[]> {
-    return this.store.select(getApps);
+  getStoreApps(): Observable<App[]> {
+    return this.store.select(getStoreApps);
   }
 
   getSelectedApp_Store(): Observable<App> {
@@ -91,5 +91,9 @@ export class AppStoreFacadeService {
 
   updateApp(appId: number): void {
     this.store.dispatch(AppActions.updateApp({ appId }));
+  }
+
+  toggleHiddenAppsInStore(): void {
+    this.store.dispatch(AppActions.toggleHiddenAppsInStore());
   }
 }

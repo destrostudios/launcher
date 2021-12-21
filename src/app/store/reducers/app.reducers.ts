@@ -10,6 +10,7 @@ import {AppState} from '../state/app-state.model';
 const initialState: AppState = {
   apps: null,
   localApps: null,
+  displayHiddenAppsInStore: false,
   selectedAppId_Store: null,
   selectedAppId_Library: null,
   librarySearchText: '',
@@ -146,6 +147,10 @@ const reducer = createReducer(
       outdatedFileIds: [],
       updateProgress: null
     }))
+  })),
+  on(AppActions.toggleHiddenAppsInStore, state => ({
+    ...state,
+    displayHiddenAppsInStore: !state.displayHiddenAppsInStore,
   })),
 );
 

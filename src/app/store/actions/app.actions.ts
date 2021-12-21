@@ -21,3 +21,4 @@ export const updateApp = createAction('[App] Update app', props<{ appId: number 
 export const setUpdateProgress = createAction('[App] Set update progress', props<{ appId: number, updateProgress: number }>());
 export const setUpdateError = createAction('[App] Set update error', props<{ appId: number }>());
 export const setUpdateFinished = createAction('[App] Set update finished', props<{ appId: number }>());
+export const toggleHiddenAppsInStore = createAction('[App] Toggle hidden apps in store');

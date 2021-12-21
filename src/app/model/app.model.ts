@@ -9,4 +9,5 @@ export interface App {
   readonly date: string;
   readonly description: string;
   readonly executable: string;
+  readonly hidden: boolean;
 }
