@@ -16,7 +16,9 @@ function createWindow() {
     height: 720,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      // Fixes node-related issues, should be removable once we update all dependencies
+      contextIsolation: false
     }
   });
 
