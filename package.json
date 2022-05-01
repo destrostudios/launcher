@@ -7,13 +7,13 @@
   "private": true,
   "scripts": {
     "start": "ng build && npm run electron",
-    "start:prod": "ng build --prod && npm run electron",
+    "start:prod": "ng build --configuration production && npm run electron",
     "electron": "electron ./build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dist": "ng build --prod && electron-builder build --publish never",
-    "deploy": "ng build --prod && electron-builder build --publish always"
+    "dist": "ng build --configuration production && electron-builder build --publish never",
+    "deploy": "ng build --configuration production && electron-builder build --publish always"
   },
   "build": {
     "directories": {
@@ -57,11 +57,11 @@
     "font-awesome": "^4.7.0",
     "rxjs": "^7.5.5",
     "tslib": "^2.4.0",
-    "zone.js": "^0.11.5"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^13.3.4",
-    "@angular/cli": "^11.0.5",
+    "@angular/cli": "^12.2.17",
     "@angular/compiler-cli": "^13.3.4",
     "@angular/language-service": "^13.3.5",
     "@types/electron": "^1.6.10",
