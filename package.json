@@ -55,10 +55,10 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1001.5",
+    "@angular-devkit/build-angular": "^12.2.17",
     "@angular/cli": "^12.2.17",
-    "@angular/compiler-cli": "^11.0.5",
-    "@angular/language-service": "^11.0.5",
+    "@angular/compiler-cli": "^12.2.16",
+    "@angular/language-service": "^12.2.16",
     "@types/electron": "^1.6.10",
     "@types/jasmine": "^4.0.3",
     "@types/jasminewd2": "^2.0.10",
