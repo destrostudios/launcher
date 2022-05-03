@@ -24,8 +24,8 @@ export class AppEffects {
     private appHttpService: AppHttpService,
     private ipcService: IpcService,
   ) {
-    this.ipcService.on('appFilesCompared', (event, appId, outdatedFileIds) => {
-      this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFileIds }));
+    this.ipcService.on('appFilesCompared', (event, appId, outdatedFileIds, localFilesToBeDeleted) => {
+      this.appStore.dispatch(AppActions.setAppCompared({ appId, outdatedFileIds, localFilesToBeDeleted }));
     });
     this.ipcService.on('appFilesUpdateProgress', (event, appId, updateProgress) => {
       this.appStore.dispatch(AppActions.setUpdateProgress({ appId, updateProgress }));
@@ -61,7 +61,7 @@ export class AppEffects {
   loadAppFiles = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadAppFiles),
     mergeMap(({ appId }) => this.appHttpService.getAppFiles(appId).pipe(
-      map(appFiles => AppActions.loadAppFilesSuccessful({ appId, appFiles })),
+      map(appFilesResponse => AppActions.loadAppFilesSuccessful({ appId, appFilesResponse })),
       catchError(error => of(AppActions.loadAppFilesError({ appId, error })))
     ))
   ));
@@ -80,9 +80,9 @@ export class AppEffects {
   compareLocalAppFilesToAppFiles = createEffect(() => this.actions.pipe(
     ofType(AppActions.loadAppFilesSuccessful),
     withLatestFrom(this.appStore.select(getApps)),
-    switchMap(([{ appId, appFiles }, apps]) => {
+    switchMap(([{ appId, appFilesResponse }, apps]) => {
       const app = getApp(apps, appId);
-      this.ipcService.send('compareAppFiles', app, appFiles);
+      this.ipcService.send('compareAppFiles', app, appFilesResponse);
       return EMPTY;
     })
   ), { dispatch: false });
@@ -97,7 +97,7 @@ export class AppEffects {
       const app = getApp(apps, appId);
       const localApp = getLocalApp(localApps, appId);
       const outdatedFiles = getOutdatedAppFiles(localApp);
-      this.ipcService.send('updateAppFiles', app, outdatedFiles);
+      this.ipcService.send('updateAppFiles', app, outdatedFiles, localApp.localFilesToBeDeleted);
       return EMPTY;
     })
   ), { dispatch: false });

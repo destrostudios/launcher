@@ -4,7 +4,7 @@ import {Inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {App} from '../../../model/app.model';
-import {AppFile} from '../../../model/app-file.model';
+import {AppFilesResponse} from '../../../model/app-files-response.model';
 import {MASTERSERVER_URL} from '../../injection-tokens';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class AppHttpService {
     return this.httpClient.get<void>(this.masterserverUrl + '/apps/' + appId + '/removeFromAccount');
   }
 
-  getAppFiles(appId: number): Observable<AppFile[]> {
-    return this.httpClient.get<AppFile[]>(this.masterserverUrl + '/apps/' + appId + '/files');
+  getAppFiles(appId: number): Observable<AppFilesResponse> {
+    return this.httpClient.get<AppFilesResponse>(this.masterserverUrl + '/apps/' + appId + '/files');
   }
 }

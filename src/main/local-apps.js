@@ -1,41 +1,71 @@
-const childProcess = require("child_process");
+const childProcess = require('child_process');
 const crypto = require('crypto');
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
 
-function compareAppFiles(event, app, appFiles, userDataPath) {
+function compareAppFiles(event, app, appFilesResponse, userDataPath) {
   const outdatedFileIds = [];
-  compareNextAppFile(app, appFiles, userDataPath, 0, (appFile, isUpToDate) => {
-    if (!isUpToDate) {
-      outdatedFileIds.push(appFile.id);
-    }
+  const localFilesToBeDeleted = [];
+  const localAppDirectoryPath = getLocalFilePath(userDataPath, app, '');
+  let localFilePaths = getAllFilePaths(localAppDirectoryPath, '');
+  checkNextLocalFileForDeletion(localFilePaths, appFilesResponse, 0, localFilePath => {
+    localFilesToBeDeleted.push(localFilePath);
   }, () => {
-    console.log('Comparison results "' + app.name + '": ' + outdatedFileIds.length + ' outdated files');
-    event.reply('appFilesCompared', app.id, outdatedFileIds);
+    compareNextAppFile(app, appFilesResponse.files, userDataPath, 0, appFile => {
+      outdatedFileIds.push(appFile.id);
+    }, () => {
+      console.log('Comparison results "' + app.name + '": ' + outdatedFileIds.length + ' outdated files, ' + localFilesToBeDeleted.length + ' files to be deleted');
+      event.reply('appFilesCompared', app.id, outdatedFileIds, localFilesToBeDeleted);
+    });
   });
 }
 
-function compareNextAppFile(app, appFiles, userDataPath, currentFileIndex, isUpToDateCallback, finishedCallback) {
-  const appFile = appFiles[currentFileIndex];
-  const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
-  fs.readFile(localFilePath, (error, data) => {
-    let isUpToDate = false;
-    if (!error) {
-      const checksumSha256 = getChecksumSha256(data);
-      if (checksumSha256 === appFile.checksumSha256) {
-        isUpToDate = true;
-      }
-    }
-    isUpToDateCallback(appFile, isUpToDate);
-
-    const newFileIndex = (currentFileIndex + 1);
-    if (newFileIndex < appFiles.length) {
-      compareNextAppFile(app, appFiles, userDataPath, currentFileIndex + 1, isUpToDateCallback, finishedCallback);
+function getAllFilePaths(baseDirectory, directoryPath, dest = []) {
+  const files = fs.readdirSync(baseDirectory + directoryPath)
+  files.forEach(file => {
+    const filePath = directoryPath + file;
+    if (fs.statSync(baseDirectory + filePath).isDirectory()) {
+      getAllFilePaths(baseDirectory, filePath + '/', dest);
     } else {
-      finishedCallback();
+      dest.push(filePath);
     }
-  });
+  })
+  return dest;
+}
+
+function checkNextLocalFileForDeletion(localFilePaths, appFilesResponse, currentFileIndex, shouldBeDeletedCallback, finishedCallback) {
+  if (currentFileIndex < localFilePaths.length) {
+    const localFilePath = localFilePaths[currentFileIndex];
+    if ((appFilesResponse.protections.indexOf(localFilePath) === -1) && (!appFilesResponse.files.some(appFile => appFile.path === localFilePath))) {
+      shouldBeDeletedCallback(localFilePath);
+    }
+    checkNextLocalFileForDeletion(localFilePaths, appFilesResponse, currentFileIndex + 1, shouldBeDeletedCallback, finishedCallback);
+  } else {
+    finishedCallback();
+  }
+}
+
+function compareNextAppFile(app, appFiles, userDataPath, currentFileIndex, isOutdatedCallback, finishedCallback) {
+  if (currentFileIndex < appFiles.length) {
+    const appFile = appFiles[currentFileIndex];
+    const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
+    fs.readFile(localFilePath, (error, data) => {
+      let isOutdated = true;
+      if (!error) {
+        const checksumSha256 = getChecksumSha256(data);
+        if (checksumSha256 === appFile.checksumSha256) {
+          isOutdated = false;
+        }
+      }
+      if (isOutdated) {
+        isOutdatedCallback(appFile);
+      }
+      compareNextAppFile(app, appFiles, userDataPath, currentFileIndex + 1, isOutdatedCallback, finishedCallback);
+    });
+  } else {
+    finishedCallback();
+  }
 }
 
 function getChecksumSha256(data) {
@@ -46,21 +76,44 @@ function getChecksumSha256(data) {
     .toString('base64');
 }
 
-function updateAppFiles(event, app, outdatedAppFiles, userDataPath) {
-  let totalBytesToDownload = getTotalBytes(outdatedAppFiles);
-  let totalBytesDownloaded = 0;
-  downloadNextAppFile(app, outdatedAppFiles, userDataPath, 0, downloadedBytes => {
-    totalBytesDownloaded += downloadedBytes;
-    event.reply('appFilesUpdateProgress', app.id, (totalBytesDownloaded / totalBytesToDownload));
-  }, error => {
+function updateAppFiles(event, app, outdatedAppFiles, localFilesToBeDeleted, userDataPath) {
+  const updateFinishedCallback = error => {
     if (error) {
-      console.error('Error while downloading app files of ' + app.name + ':');
+      console.error('Error while updating app ' + app.name + ':');
       console.error(error);
       event.reply('appFilesUpdateError', app.id, error);
     } else {
       event.reply('appFilesUpdated', app.id);
     }
+  };
+  deleteNextLocalFile(app, localFilesToBeDeleted, userDataPath, 0, (error) => {
+    if (error) {
+      updateFinishedCallback(error);
+    } else {
+      let totalBytesToDownload = getTotalBytes(outdatedAppFiles);
+      let totalBytesDownloaded = 0;
+      downloadNextAppFile(app, outdatedAppFiles, userDataPath, 0, downloadedBytes => {
+        totalBytesDownloaded += downloadedBytes;
+        event.reply('appFilesUpdateProgress', app.id, (totalBytesDownloaded / totalBytesToDownload));
+      }, updateFinishedCallback);
+    }
   });
+}
+
+function deleteNextLocalFile(app, localFilesToBeDeleted, userDataPath, currentFileIndex, finishedCallback) {
+  if (currentFileIndex < localFilesToBeDeleted.length) {
+    const localFilePath = getLocalFilePath(userDataPath, app, localFilesToBeDeleted[currentFileIndex]);
+    console.log('Deleting file: "' + localFilePath + '"');
+    fs.unlink(localFilePath, (error) => {
+      if (error) {
+        finishedCallback(error);
+      } else {
+        deleteNextLocalFile(app, localFilesToBeDeleted, userDataPath, currentFileIndex + 1, finishedCallback);
+      }
+    })
+  } else {
+    finishedCallback();
+  }
 }
 
 function getTotalBytes(appFiles) {
@@ -72,21 +125,20 @@ function getTotalBytes(appFiles) {
 }
 
 function downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex, downloadedBytesCallback, finishedCallback) {
-  const appFile = outdatedAppFiles[currentFileIndex];
-  const url = 'https://destrostudios.com' + getAppFilePath(app, appFile.path);
-  const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
-  downloadFile(url, localFilePath, downloadedBytesCallback, error => {
-    if (error) {
-      finishedCallback(error);
-    } else {
-      const newFileIndex = (currentFileIndex + 1);
-      if (newFileIndex < outdatedAppFiles.length) {
-        downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex + 1, downloadedBytesCallback, finishedCallback);
+  if (currentFileIndex < outdatedAppFiles.length) {
+    const appFile = outdatedAppFiles[currentFileIndex];
+    const url = 'https://destrostudios.com' + getAppFilePath(app, appFile.path);
+    const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
+    downloadFile(url, localFilePath, downloadedBytesCallback, error => {
+      if (error) {
+        finishedCallback(error);
       } else {
-        finishedCallback();
+        downloadNextAppFile(app, outdatedAppFiles, userDataPath, currentFileIndex + 1, downloadedBytesCallback, finishedCallback);
       }
-    }
-  })
+    });
+  } else {
+    finishedCallback();
+  }
 }
 
 function downloadFile(url, destination, downloadedBytesCallback, finishedCallback) {
@@ -105,7 +157,7 @@ function downloadFile(url, destination, downloadedBytesCallback, finishedCallbac
     });
   }).on('error', error => {
     fs.unlink(destination, () => {
-      finishedCallback(error.message);
+      finishedCallback(error);
     });
   });
 }

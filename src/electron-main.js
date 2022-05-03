@@ -43,6 +43,8 @@ function createWindow() {
       autoUpdater.checkForUpdates();
     }
   });
+
+  mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', createWindow);
@@ -68,6 +70,6 @@ const userDataPath = app.getPath('userData');
 ipcMain.on('minimizeWindow', () => mainWindow.minimize());
 ipcMain.on('closeWindow', () => mainWindow.close());
 ipcMain.on('restartAndInstall', () => autoUpdater.quitAndInstall());
-ipcMain.on('compareAppFiles', (event, app, appFiles) => compareAppFiles(event, app, appFiles, userDataPath));
-ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles) => updateAppFiles(event, app, outdatedAppFiles, userDataPath));
+ipcMain.on('compareAppFiles', (event, app, appFilesResponse) => compareAppFiles(event, app, appFilesResponse, userDataPath));
+ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles, localFilesToBeDeleted) => updateAppFiles(event, app, outdatedAppFiles, localFilesToBeDeleted,userDataPath));
 ipcMain.on('startApp', (event, app, authToken) => startApp(event, app, authToken, userDataPath));

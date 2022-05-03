@@ -31,6 +31,7 @@ export function updateLocalApps(localApps: LocalApp[], appId: number, updatedLoc
       files: null,
       version: null,
       outdatedFileIds: null,
+      localFilesToBeDeleted: null,
       updateProgress: null
     };
   }
@@ -43,6 +44,6 @@ export function getLocalApp(localApps: LocalApp[], appId: number): LocalApp {
 
 export function getOutdatedAppFiles(localApp: LocalApp): AppFile[] {
   return localApp.outdatedFileIds.map(appFileId => {
-    return localApp.files.data.find(appFile => appFile.id === appFileId);
+    return localApp.files.data.files.find(appFile => appFile.id === appFileId);
   });
 }

@@ -86,13 +86,13 @@ const reducer = createReducer(
       }
     }))
   })),
-  on(AppActions.loadAppFilesSuccessful, (state, { appId, appFiles }) => ({
+  on(AppActions.loadAppFilesSuccessful, (state, { appId, appFilesResponse }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
       files: {
         isLoading: false,
-        data: appFiles,
+        data: appFilesResponse,
         error: null
       }
     }))
@@ -108,12 +108,14 @@ const reducer = createReducer(
       }
     }))
   })),
-  on(AppActions.setAppCompared, (state, { appId, outdatedFileIds }) => ({
+  on(AppActions.setAppCompared, (state, { appId, outdatedFileIds, localFilesToBeDeleted }) => ({
     ...state,
     localApps: updateLocalApps(state.localApps, appId, localApp => ({
       ...localApp,
-      version: ((outdatedFileIds.length > 0) ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
-      outdatedFileIds
+      version: (((outdatedFileIds.length > 0) || (localFilesToBeDeleted.length > 0))
+        ? LocalAppVersion.OUTDATED : LocalAppVersion.UP_TO_DATE),
+      outdatedFileIds,
+      localFilesToBeDeleted
     })),
   })),
   on(AppActions.updateApp, (state, { appId }) => ({
