@@ -43,8 +43,6 @@ function createWindow() {
       autoUpdater.checkForUpdates();
     }
   });
-
-  mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', createWindow);
