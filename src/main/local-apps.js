@@ -21,17 +21,24 @@ function compareAppFiles(event, app, appFilesResponse, userDataPath) {
   });
 }
 
-function getAllFilePaths(baseDirectory, directoryPath, dest = []) {
+function getAllFilePaths(baseDirectory, directoryPath) {
+  const filePaths = [];
+  if (fs.existsSync(baseDirectory + directoryPath)) {
+    addAllFilePaths(baseDirectory, directoryPath, filePaths);
+  }
+  return filePaths;
+}
+
+function addAllFilePaths(baseDirectory, directoryPath, dest) {
   const files = fs.readdirSync(baseDirectory + directoryPath)
   files.forEach(file => {
     const filePath = directoryPath + file;
     if (fs.statSync(baseDirectory + filePath).isDirectory()) {
-      getAllFilePaths(baseDirectory, filePath + '/', dest);
+      addAllFilePaths(baseDirectory, filePath + '/', dest);
     } else {
       dest.push(filePath);
     }
-  })
-  return dest;
+  });
 }
 
 function checkNextLocalFileForDeletion(localFilePaths, appFilesResponse, currentFileIndex, shouldBeDeletedCallback, finishedCallback) {
