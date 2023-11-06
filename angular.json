@@ -64,8 +64,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "50kb",
-                  "maximumError": "100kb"
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
                 }
               ]
             }
@@ -88,6 +88,15 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "destrostudios-launcher:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "test": {
@@ -120,6 +129,6 @@
           }
         }
       }
-    }},
-  "defaultProject": "destrostudios-launcher"
+    }
+  }
 }

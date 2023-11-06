@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 
 import {PlainCredentials} from '../../../model/plain-credentials.model';
 
@@ -15,9 +15,9 @@ export class LoginComponent {
   @Output() login = new EventEmitter<PlainCredentials>();
   @Output() register = new EventEmitter<void>();
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: UntypedFormBuilder) {
     this.loginForm = formBuilder.group({
       login: ['', Validators.required],
       password: ['', Validators.required]

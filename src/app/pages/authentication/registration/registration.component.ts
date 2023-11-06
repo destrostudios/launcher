@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 
 import * as bcrypt from 'bcryptjs';
 
@@ -17,9 +17,9 @@ export class RegistrationComponent {
   @Output() login = new EventEmitter<void>();
   @Output() register = new EventEmitter<Registration>();
 
-  registrationForm: FormGroup;
+  registrationForm: UntypedFormGroup;
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: UntypedFormBuilder) {
     this.registrationForm = formBuilder.group({
       login: ['', Validators.required],
       password: ['', Validators.required]

@@ -107,8 +107,10 @@ label {
   font-size: 14px;
 }
 
+$input-height: 44px;
 input[type=text], input[type=password], input[type=submit], textarea, button {
-  height: 44px;
+  height: $input-height;
+  min-height: $input-height;
   padding-left: $baseline;
   padding-right: $baseline;
   border: 1px solid $color-grey;

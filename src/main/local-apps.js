@@ -152,9 +152,7 @@ function downloadFile(url, destination, downloadedBytesCallback, finishedCallbac
   createDirectoryIfNotExisting(destination);
   const file = fs.createWriteStream(destination);
   console.log('Downloading file: "' + url + '" --> "' + destination + '"');
-  // FIXME: LetsEncrypt deprecated their old root certificate (https://letsencrypt.org/docs/dst-root-ca-x3-expiration-september-2021)
-  // The currently used electron-builder version still has an old electron dependency of 11.X - When we have 13.X with the fix, the rejectUnauthorized workaround can be removed
-  https.get(url, { rejectUnauthorized: false }, response => {
+  https.get(url, response => {
     response.on('data', chunk => {
       file.write(chunk);
       downloadedBytesCallback(chunk.length);
