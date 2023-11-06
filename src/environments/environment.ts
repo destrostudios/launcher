@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  masterserverUrl: 'https://destrostudios.com:8080'
+  masterserverUrl: 'http://localhost:8080'
 };
 
 /*

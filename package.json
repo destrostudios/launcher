@@ -70,11 +70,12 @@
     "@types/electron": "^1.6.10",
     "@types/jasmine": "^5.1.1",
     "@types/jasminewd2": "^2.0.12",
-    "@types/node": "^18.16.0",
+    "@types/node": "^18.16.3",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "codelyzer": "^6.0.2",
     "electron-builder": "^24.6.4",
+    "eslint": "^8.53.0",
     "jasmine-core": "^5.1.1",
     "jasmine-spec-reporter": "^7.0.0",
     "karma": "^6.4.2",
@@ -83,7 +84,6 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "protractor": "^7.0.0",
-    "ssh2-sftp-client": "^9.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   }
