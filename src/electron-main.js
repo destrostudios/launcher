@@ -36,6 +36,7 @@ function createWindow() {
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
+    // mainWindow.webContents.openDevTools();
 
     if (isDev) {
       mainWindow.webContents.send('selfUpdateNotAvailable');
