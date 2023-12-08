@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { IpcService } from '../../services/ipc/ipc.service';
+import { IpcService } from '../../services/ipc.service';
 
 @Component({
   selector: 'ds-window-controls',

@@ -6,20 +6,21 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, mergeMap } from 'rxjs/operators';
 
-import { UserStoreFacadeService } from '../../services/user-store-facade/user-store-facade.service';
+import { getSessionId } from '../../store/selectors/user.selectors';
 
 @Injectable()
 export class SessionIdInterceptor implements HttpInterceptor {
-  constructor(public userStoreFacadeService: UserStoreFacadeService) {}
+  constructor(public store: Store) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    return this.userStoreFacadeService.getSessionId().pipe(
+    return this.store.select(getSessionId).pipe(
       first(),
       mergeMap((sessionId) => {
         if (sessionId != null) {

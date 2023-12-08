@@ -1,6 +1,6 @@
-import { App } from '../../../model/app.model';
-import { AppFile } from '../../../model/app-file.model';
-import { LocalApp } from '../../../model/local-app.model';
+import { App } from '../../model/app.model';
+import { AppFile } from '../../model/app-file.model';
+import { LocalApp } from '../../model/local-app.model';
 
 export function getApp(apps: App[], id: number): App {
   return apps.find((app) => app.id === id);

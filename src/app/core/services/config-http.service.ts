@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Configs } from '../../../model/configs.model';
-import { MASTERSERVER_URL } from '../../injection-tokens';
+import { Configs } from '../../model/configs.model';
+import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()
 export class ConfigHttpService {

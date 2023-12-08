@@ -11,14 +11,14 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 
-import { AppHttpService } from '../../core/services/app-http/app-http.service';
-import { IpcService } from '../../core/services/ipc/ipc.service';
+import { AppHttpService } from '../../core/services/app-http.service';
+import { IpcService } from '../../core/services/ipc.service';
 import {
   getApp,
   getLocalApp,
   getOutdatedAppFiles,
   getPreselectedApp,
-} from '../../core/util/app/app.util';
+} from '../../core/util/app.util';
 import { LocalAppVersion } from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
@@ -29,20 +29,19 @@ import {
   getSelectedApp_Library,
   getStartingAppId,
 } from '../selectors/app.selectors';
-import { AppState } from '../state/app-state.model';
 
 @Injectable()
 export class AppEffects {
   constructor(
     private actions: Actions,
-    private appStore: Store<AppState>,
+    private store: Store,
     private appHttpService: AppHttpService,
     private ipcService: IpcService,
   ) {
     this.ipcService.on(
       'appFilesCompared',
       (event, appId, outdatedFileIds, localFilesToBeDeleted) => {
-        this.appStore.dispatch(
+        this.store.dispatch(
           AppActions.setAppCompared({
             appId,
             outdatedFileIds,
@@ -54,7 +53,7 @@ export class AppEffects {
     this.ipcService.on(
       'appFilesUpdateProgress',
       (event, appId, updateProgress) => {
-        this.appStore.dispatch(
+        this.store.dispatch(
           AppActions.setUpdateProgress({ appId, updateProgress }),
         );
       },
@@ -62,10 +61,10 @@ export class AppEffects {
     this.ipcService.on('appFilesUpdateError', (event, appId, error) => {
       // TODO: Store and display error
       console.error(error);
-      this.appStore.dispatch(AppActions.setUpdateError({ appId }));
+      this.store.dispatch(AppActions.setUpdateError({ appId }));
     });
     this.ipcService.on('appFilesUpdated', (event, appId) => {
-      this.appStore.dispatch(AppActions.setUpdateFinished({ appId }));
+      this.store.dispatch(AppActions.setUpdateFinished({ appId }));
     });
   }
 
@@ -116,7 +115,7 @@ export class AppEffects {
   cancelAppStartOnLoadingAppFilesError = createEffect(() =>
     this.actions.pipe(
       ofType(AppActions.loadAppFilesError),
-      withLatestFrom(this.appStore.select(getStartingAppId)),
+      withLatestFrom(this.store.select(getStartingAppId)),
       switchMap(([{ appId }, startingAppId]) => {
         if (appId === startingAppId) {
           return of(AppActions.setAppNotStarting());
@@ -130,7 +129,7 @@ export class AppEffects {
     () =>
       this.actions.pipe(
         ofType(AppActions.loadAppFilesSuccessful),
-        withLatestFrom(this.appStore.select(getApps)),
+        withLatestFrom(this.store.select(getApps)),
         switchMap(([{ appId, appFilesResponse }, apps]) => {
           const app = getApp(apps, appId);
           this.ipcService.send('compareAppFiles', app, appFilesResponse);
@@ -145,8 +144,8 @@ export class AppEffects {
       this.actions.pipe(
         ofType(AppActions.updateApp),
         withLatestFrom(
-          this.appStore.select(getApps),
-          this.appStore.select(getLocalApps),
+          this.store.select(getApps),
+          this.store.select(getLocalApps),
         ),
         switchMap(([{ appId }, apps, localApps]) => {
           const app = getApp(apps, appId);
@@ -167,7 +166,7 @@ export class AppEffects {
   cancelAppStartWhenNotUpToDate = createEffect(() =>
     this.actions.pipe(
       ofType(AppActions.setAppCompared),
-      withLatestFrom(this.appStore.select(getStartingAppId)),
+      withLatestFrom(this.store.select(getStartingAppId)),
       switchMap(([{ appId, outdatedFileIds }, startingAppId]) => {
         if (appId === startingAppId && outdatedFileIds.length > 0) {
           return of(AppActions.setAppNotStarting());
@@ -181,8 +180,8 @@ export class AppEffects {
     this.actions.pipe(
       ofType(AppActions.setAppCompared, AppActions.setUpdateFinished),
       withLatestFrom(
-        this.appStore.select(getStartingAppId),
-        this.appStore.select(getLocalApps),
+        this.store.select(getStartingAppId),
+        this.store.select(getLocalApps),
       ),
       switchMap(([{ appId }, startingAppId, localApps]) => {
         if (appId === startingAppId) {
@@ -207,8 +206,8 @@ export class AppEffects {
     this.actions.pipe(
       ofType(UserActions.loadAuthTokenSuccessful),
       withLatestFrom(
-        this.appStore.select(getStartingAppId),
-        this.appStore.select(getApps),
+        this.store.select(getStartingAppId),
+        this.store.select(getApps),
       ),
       map(([{ authToken }, startingAppId, apps]) => {
         const app = getApp(apps, startingAppId);
@@ -222,8 +221,8 @@ export class AppEffects {
     this.actions.pipe(
       ofType(UserActions.userLoaded, AppActions.setLibrarySearchText),
       withLatestFrom(
-        this.appStore.select(getSelectedApp_Library),
-        this.appStore.select(getDisplayedLibraryApps),
+        this.store.select(getSelectedApp_Library),
+        this.store.select(getDisplayedLibraryApps),
       ),
       switchMap(([_, selectedApp_Library, displayedLibraryApps]) => {
         if (
@@ -246,8 +245,8 @@ export class AppEffects {
         AppActions.setLibrarySearchText,
       ),
       withLatestFrom(
-        this.appStore.select(getSelectedApp_Library),
-        this.appStore.select(getDisplayedLibraryApps),
+        this.store.select(getSelectedApp_Library),
+        this.store.select(getDisplayedLibraryApps),
       ),
       switchMap(([_, selectedApp_Library, displayedApps]) => {
         if (!selectedApp_Library && displayedApps) {

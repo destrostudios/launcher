@@ -2,7 +2,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 
 import { createReducer, on } from '@ngrx/store';
 
-import { updateLocalApps } from '../../core/util/app/app.util';
+import { updateLocalApps } from '../../core/util/app.util';
 import { LocalAppVersion } from '../../model/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import { AppState } from '../state/app-state.model';

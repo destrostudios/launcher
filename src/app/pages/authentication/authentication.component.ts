@@ -1,15 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
-import { BackgroundService } from '../../core/services/background/background.service';
-import { ConfigStoreFacadeService } from '../../core/services/config-store-facade/config-store-facade.service';
-import { LayoutStoreFacadeService } from '../../core/services/layout-store-facade/layout-store-facade.service';
-import { NewsStoreFacadeService } from '../../core/services/news-store-facade/news-store-facade.service';
-import { UserStoreFacadeService } from '../../core/services/user-store-facade/user-store-facade.service';
+import { BackgroundService } from '../../core/services/background.service';
 import { PlainCredentials } from '../../model/plain-credentials.model';
 import { Registration } from '../../model/registration.model';
+import * as AppActions from '../../store/actions/app.actions';
+import * as ConfigActions from '../../store/actions/config.actions';
+import * as LayoutActions from '../../store/actions/layout.actions';
+import * as NewsActions from '../../store/actions/news.actions';
+import * as UserActions from '../../store/actions/user.actions';
+import { isLoginLoading } from '../../store/selectors/aggregation.selectors';
+import { isLoginOrRegistrationShown } from '../../store/selectors/layout.selectors';
+import {
+  getLoginErrorMessage,
+  getRegistrationErrorMessage,
+  isRegistrationLoading,
+} from '../../store/selectors/user.selectors';
 
 @Component({
   selector: 'ds-authentication',
@@ -25,44 +33,41 @@ export class AuthenticationComponent implements OnInit {
   login: Observable<string>;
 
   constructor(
-    private layoutStoreFacadeService: LayoutStoreFacadeService,
-    private userStoreFacadeService: UserStoreFacadeService,
-    private configStoreFacadeService: ConfigStoreFacadeService,
-    private appStoreFacadeService: AppStoreFacadeService,
-    private newsStoreFacadeService: NewsStoreFacadeService,
+    private store: Store,
     private backgroundService: BackgroundService,
   ) {}
 
   ngOnInit(): void {
-    this.isLoginOrRegistrationShown =
-      this.layoutStoreFacadeService.isLoginOrRegistrationShown();
-    this.isLoginLoading = this.userStoreFacadeService.isLoginLoading();
-    this.isRegistrationLoading =
-      this.userStoreFacadeService.isRegistrationLoading();
-    this.loginErrorMessage = this.userStoreFacadeService.getLoginErrorMessage();
-    this.registrationErrorMessage =
-      this.userStoreFacadeService.getRegistrationErrorMessage();
+    this.isLoginOrRegistrationShown = this.store.select(
+      isLoginOrRegistrationShown,
+    );
+    this.isLoginLoading = this.store.select(isLoginLoading);
+    this.isRegistrationLoading = this.store.select(isRegistrationLoading);
+    this.loginErrorMessage = this.store.select(getLoginErrorMessage);
+    this.registrationErrorMessage = this.store.select(
+      getRegistrationErrorMessage,
+    );
 
     this.backgroundService.reset();
 
-    this.configStoreFacadeService.loadClientConfigs();
-    this.appStoreFacadeService.loadApps();
-    this.newsStoreFacadeService.loadLatestNews();
+    this.store.dispatch(ConfigActions.loadClientConfigs());
+    this.store.dispatch(AppActions.loadApps());
+    this.store.dispatch(NewsActions.loadLatestNews());
   }
 
   openLogin(): void {
-    this.layoutStoreFacadeService.openLogin();
+    this.store.dispatch(LayoutActions.openLogin());
   }
 
   openRegistration(): void {
-    this.layoutStoreFacadeService.openRegistration();
+    this.store.dispatch(LayoutActions.openRegistration());
   }
 
   startLoginProcess(plainCredentials: PlainCredentials) {
-    this.userStoreFacadeService.startLoginProcess(plainCredentials);
+    this.store.dispatch(UserActions.startLoginProcess({ plainCredentials }));
   }
 
   register(registration: Registration) {
-    this.userStoreFacadeService.register(registration);
+    this.store.dispatch(UserActions.register({ registration }));
   }
 }

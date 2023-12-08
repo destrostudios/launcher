@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { News } from '../../../model/news.model';
-import { MASTERSERVER_URL } from '../../injection-tokens';
+import { News } from '../../model/news.model';
+import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()
 export class NewsHttpService {

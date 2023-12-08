@@ -1,11 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
-import { BackgroundService } from '../../core/services/background/background.service';
+import { BackgroundService } from '../../core/services/background.service';
 import { App } from '../../model/app.model';
+import { getFeaturedApp } from '../../store/selectors/aggregation.selectors';
+import {
+  getSelectedApp_Store,
+  getStoreApps,
+} from '../../store/selectors/app.selectors';
 
 @Component({
   selector: 'ds-store',
@@ -22,14 +27,14 @@ export class StoreComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private appStoreFacadeService: AppStoreFacadeService,
+    private store: Store,
     private backgroundService: BackgroundService,
   ) {}
 
   ngOnInit(): void {
-    this.featuredApp = this.appStoreFacadeService.getFeaturedApp();
-    this.apps = this.appStoreFacadeService.getStoreApps();
-    this.selectedApp = this.appStoreFacadeService.getSelectedApp_Store();
+    this.featuredApp = this.store.select(getFeaturedApp);
+    this.apps = this.store.select(getStoreApps);
+    this.selectedApp = this.store.select(getSelectedApp_Store);
 
     this.subscriptions = [
       this.featuredApp.subscribe((featuredApp) => {

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { BackgroundService } from '../../core/services/background/background.service';
-import { LayoutStoreFacadeService } from '../../core/services/layout-store-facade/layout-store-facade.service';
-import { NewsStoreFacadeService } from '../../core/services/news-store-facade/news-store-facade.service';
+import { BackgroundService } from '../../core/services/background.service';
 import { News } from '../../model/news.model';
+import * as LayoutActions from '../../store/actions/layout.actions';
+import { getLanguage } from '../../store/selectors/layout.selectors';
+import { getLatestNews } from '../../store/selectors/news.selectors';
 
 @Component({
   selector: 'ds-home',
@@ -19,19 +21,18 @@ export class HomeComponent implements OnInit {
   language: Observable<string>;
 
   constructor(
-    private newsStoreFacadeService: NewsStoreFacadeService,
-    private layoutStoreFacadeService: LayoutStoreFacadeService,
+    private store: Store,
     private backgroundService: BackgroundService,
   ) {}
 
   ngOnInit(): void {
-    this.latestNews = this.newsStoreFacadeService.getLatestNews();
-    this.language = this.layoutStoreFacadeService.getLanguage();
+    this.latestNews = this.store.select(getLatestNews);
+    this.language = this.store.select(getLanguage);
 
     this.backgroundService.reset();
   }
 
   setLanguage(language: string): void {
-    this.layoutStoreFacadeService.setLanguage(language);
+    this.store.dispatch(LayoutActions.setLanguage({ language }));
   }
 }

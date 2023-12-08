@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { LayoutStoreFacadeService } from './core/services/layout-store-facade/layout-store-facade.service';
+import * as LayoutActions from './store/actions/layout.actions';
+import { isHeaderShown } from './store/selectors/layout.selectors';
 
 @Component({
   selector: 'ds-app',
@@ -14,15 +15,15 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
-    private layoutStoreFacadeService: LayoutStoreFacadeService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
     this.translateService.setDefaultLang('en');
     this.translateService.use('en');
 
-    this.isHeaderShown = this.layoutStoreFacadeService.isHeaderShown();
+    this.isHeaderShown = this.store.select(isHeaderShown);
 
-    this.layoutStoreFacadeService.navigate('update');
+    this.store.dispatch(LayoutActions.navigate({ route: 'update' }));
   }
 }

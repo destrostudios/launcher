@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { getApp, getLocalApp } from '../../core/util/app/app.util';
+import { getApp, getLocalApp } from '../../core/util/app.util';
 import { LocalAppVersion } from '../../model/local-app-version.enum';
 import { AppState } from '../state/app-state.model';
 

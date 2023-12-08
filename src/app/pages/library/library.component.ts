@@ -2,11 +2,23 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Observable, Subscription } from 'rxjs';
 
-import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
-import { BackgroundService } from '../../core/services/background/background.service';
-import { UserStoreFacadeService } from '../../core/services/user-store-facade/user-store-facade.service';
+import { Store } from '@ngrx/store';
+import { BackgroundService } from '../../core/services/background.service';
 import { App } from '../../model/app.model';
 import { LocalAppVersion } from '../../model/local-app-version.enum';
+import * as AppActions from '../../store/actions/app.actions';
+import {
+  getDisplayedLibraryApps,
+  hasOwnedApps,
+} from '../../store/selectors/aggregation.selectors';
+import {
+  getLibrarySearchText,
+  getSelectedApp_Library,
+  getSelectedApp_Library_IsStarting,
+  getSelectedApp_Library_LocalVersion,
+  getSelectedApp_Library_UpdateProgressText,
+  isSomeLocalAppUpdating,
+} from '../../store/selectors/app.selectors';
 
 @Component({
   selector: 'ds-library',
@@ -28,24 +40,25 @@ export class LibraryComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[];
 
   constructor(
-    private appStoreFacadeService: AppStoreFacadeService,
-    private userStoreFacadeService: UserStoreFacadeService,
+    private store: Store,
     private backgroundService: BackgroundService,
   ) {}
 
   ngOnInit(): void {
-    this.hasOwnedApps = this.userStoreFacadeService.hasOwnedApps();
-    this.librarySearchText = this.appStoreFacadeService.getLibrarySearchText();
-    this.displayedApps = this.userStoreFacadeService.getDisplayedLibraryApps();
-    this.selectedApp = this.appStoreFacadeService.getSelectedApp_Library();
-    this.selectedApp_LocalVersion =
-      this.appStoreFacadeService.getSelectedApp_Library_LocalVersion();
-    this.selectedApp_UpdateProgressText =
-      this.appStoreFacadeService.getSelectedApp_Library_UpdateProgressText();
-    this.selectedApp_IsStarting =
-      this.appStoreFacadeService.getSelectedApp_Library_IsStarting();
-    this.isSomeLocalAppUpdating =
-      this.appStoreFacadeService.isSomeLocalAppUpdating();
+    this.hasOwnedApps = this.store.select(hasOwnedApps);
+    this.librarySearchText = this.store.select(getLibrarySearchText);
+    this.displayedApps = this.store.select(getDisplayedLibraryApps);
+    this.selectedApp = this.store.select(getSelectedApp_Library);
+    this.selectedApp_LocalVersion = this.store.select(
+      getSelectedApp_Library_LocalVersion,
+    );
+    this.selectedApp_UpdateProgressText = this.store.select(
+      getSelectedApp_Library_UpdateProgressText,
+    );
+    this.selectedApp_IsStarting = this.store.select(
+      getSelectedApp_Library_IsStarting,
+    );
+    this.isSomeLocalAppUpdating = this.store.select(isSomeLocalAppUpdating);
 
     this.subscriptions = [
       this.selectedApp.subscribe((selectedApp) => {
@@ -70,20 +83,20 @@ export class LibraryComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  selectApp(app: App): void {
-    this.appStoreFacadeService.selectApp_Library(app.id);
+  selectApp(appId: number): void {
+    this.store.dispatch(AppActions.selectApp_Library({ appId }));
   }
 
   setLibrarySearchText(event: Event): void {
     const text = (event.target as HTMLInputElement).value;
-    this.appStoreFacadeService.setLibrarySearchText(text);
+    this.store.dispatch(AppActions.setLibrarySearchText({ text }));
   }
 
   startApp(appId: number): void {
-    this.appStoreFacadeService.startApp(appId);
+    this.store.dispatch(AppActions.startApp({ appId }));
   }
 
   updateApp(appId: number): void {
-    this.appStoreFacadeService.updateApp(appId);
+    this.store.dispatch(AppActions.updateApp({ appId }));
   }
 }

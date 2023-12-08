@@ -3,9 +3,9 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { App } from '../../../model/app.model';
-import { AppFilesResponse } from '../../../model/app-files-response.model';
-import { MASTERSERVER_URL } from '../../injection-tokens';
+import { App } from '../../model/app.model';
+import { AppFilesResponse } from '../../model/app-files-response.model';
+import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()
 export class AppHttpService {

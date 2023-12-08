@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { getApp, searchApps } from '../../core/util/app/app.util';
+import { getApp, searchApps } from '../../core/util/app.util';
 import {
   areAppsLoading,
   getApps,

@@ -1,13 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
-import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
-import { BackgroundService } from '../../core/services/background/background.service';
-import { LayoutStoreFacadeService } from '../../core/services/layout-store-facade/layout-store-facade.service';
-import { UserStoreFacadeService } from '../../core/services/user-store-facade/user-store-facade.service';
+import { BackgroundService } from '../../core/services/background.service';
 import { App } from '../../model/app.model';
+import * as AppActions from '../../store/actions/app.actions';
+import * as LayoutActions from '../../store/actions/layout.actions';
+import * as UserActions from '../../store/actions/user.actions';
+import { isSelectedAppOwned_Store } from '../../store/selectors/aggregation.selectors';
+import { getSelectedApp_Store } from '../../store/selectors/app.selectors';
+import {
+  isAppAdditionToAccountErrorShown,
+  isAppRemovalFromAccountErrorShown,
+} from '../../store/selectors/layout.selectors';
+import {
+  isAppAdditionToAccountIncludingUpdateLoading,
+  isAppRemovalFromAccountIncludingUpdateLoading,
+} from '../../store/selectors/user.selectors';
 
 @Component({
   selector: 'ds-store-app',
@@ -26,33 +37,34 @@ export class StoreAppComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private appStoreFacadeService: AppStoreFacadeService,
-    private userStoreFacadeService: UserStoreFacadeService,
-    private layoutStoreFacadeService: LayoutStoreFacadeService,
+    private store: Store,
     private backgroundService: BackgroundService,
   ) {}
 
   ngOnInit(): void {
-    this.app = this.appStoreFacadeService.getSelectedApp_Store();
-    this.isSelectedAppOwned_Store =
-      this.appStoreFacadeService.isSelectedAppOwned_Store();
-    this.isAppAdditionToAccountLoading =
-      this.userStoreFacadeService.isAppAdditionToAccountIncludingUpdateLoading();
-    this.isAppRemovalFromAccountLoading =
-      this.userStoreFacadeService.isAppRemovalFromAccountIncludingUpdateLoading();
-    this.isAppAdditionToAccountErrorShown =
-      this.layoutStoreFacadeService.isAppAdditionToAccountErrorShown();
-    this.isAppRemovalFromAccountErrorShown =
-      this.layoutStoreFacadeService.isAppRemovalFromAccountErrorShown();
+    this.app = this.store.select(getSelectedApp_Store);
+    this.isSelectedAppOwned_Store = this.store.select(isSelectedAppOwned_Store);
+    this.isAppAdditionToAccountLoading = this.store.select(
+      isAppAdditionToAccountIncludingUpdateLoading,
+    );
+    this.isAppRemovalFromAccountLoading = this.store.select(
+      isAppRemovalFromAccountIncludingUpdateLoading,
+    );
+    this.isAppAdditionToAccountErrorShown = this.store.select(
+      isAppAdditionToAccountErrorShown,
+    );
+    this.isAppRemovalFromAccountErrorShown = this.store.select(
+      isAppRemovalFromAccountErrorShown,
+    );
 
     this.backgroundImageSubscription = this.app.subscribe((selectedApp) => {
       this.backgroundService.setApp(selectedApp);
     });
 
     this.activatedRoute.params.subscribe((params) => {
-      const selectedAppId = Number(params.appId);
-      if (selectedAppId) {
-        this.appStoreFacadeService.selectApp_Store(selectedAppId);
+      const appId = Number(params.appId);
+      if (appId) {
+        this.store.dispatch(AppActions.selectApp_Store({ appId }));
       }
     });
   }
@@ -62,22 +74,22 @@ export class StoreAppComponent implements OnInit, OnDestroy {
   }
 
   deselectApp(): void {
-    this.appStoreFacadeService.deselectApp_Store();
+    this.store.dispatch(AppActions.deselectApp_Store());
   }
 
-  addAppToAccount(app: App): void {
-    this.userStoreFacadeService.addAppToAccount(app.id);
+  addAppToAccount(appId: number): void {
+    this.store.dispatch(UserActions.addAppToAccount({ appId }));
   }
 
-  removeAppFromAccount(app: App): void {
-    this.userStoreFacadeService.removeAppFromAccount(app.id);
+  removeAppFromAccount(appId: number): void {
+    this.store.dispatch(UserActions.removeAppFromAccount({ appId }));
   }
 
   hideAppAdditionToAccountError(): void {
-    this.layoutStoreFacadeService.hideAppAdditionToAccountError();
+    this.store.dispatch(LayoutActions.hideAppAdditionToAccountError());
   }
 
   hideAppRemovalFromAccountError(): void {
-    this.layoutStoreFacadeService.hideAppRemovalFromAccountError();
+    this.store.dispatch(LayoutActions.hideAppRemovalFromAccountError());
   }
 }

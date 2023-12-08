@@ -10,13 +10,13 @@
       *ngIf="(isSelectedAppOwned_Store | async) === false"
       text="ADD_TO_LIBRARY"
       [isLoading]="isAppAdditionToAccountLoading | async"
-      (action)="addAppToAccount(app)"
+      (action)="addAppToAccount(app.id)"
     ></ds-spinner-button>
     <ds-spinner-button
       *ngIf="isSelectedAppOwned_Store | async"
       text="REMOVE_FROM_LIBRARY"
       [isLoading]="isAppRemovalFromAccountLoading | async"
-      (action)="removeAppFromAccount(app)"
+      (action)="removeAppFromAccount(app.id)"
     ></ds-spinner-button>
   </ds-app-hub>
   <ds-modal

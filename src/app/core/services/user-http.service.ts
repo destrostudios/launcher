@@ -3,10 +3,10 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Registration } from '../../../model/registration.model';
-import { SafeCredentials } from '../../../model/safe-credentials.model';
-import { User } from '../../../model/user.model';
-import { MASTERSERVER_URL } from '../../injection-tokens';
+import { Registration } from '../../model/registration.model';
+import { SafeCredentials } from '../../model/safe-credentials.model';
+import { User } from '../../model/user.model';
+import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()
 export class UserHttpService {

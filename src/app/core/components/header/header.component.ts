@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { AppStoreFacadeService } from '../../services/app-store-facade/app-store-facade.service';
-import { UserStoreFacadeService } from '../../services/user-store-facade/user-store-facade.service';
+import * as AppActions from '../../../store/actions/app.actions';
+import * as UserActions from '../../../store/actions/user.actions';
+import { getLogin } from '../../../store/selectors/user.selectors';
 
 @Component({
   selector: 'ds-header',
@@ -13,23 +15,20 @@ import { UserStoreFacadeService } from '../../services/user-store-facade/user-st
 export class HeaderComponent implements OnInit {
   login: Observable<string>;
 
-  constructor(
-    private userStoreFacadeService: UserStoreFacadeService,
-    private appStoreFacadeService: AppStoreFacadeService,
-  ) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.login = this.userStoreFacadeService.getLogin();
+    this.login = this.store.select(getLogin);
   }
 
   onLogoClick(event: MouseEvent): void {
     // Middle
     if (event.button === 1) {
-      this.appStoreFacadeService.toggleHiddenAppsInStore();
+      this.store.dispatch(AppActions.toggleHiddenAppsInStore());
     }
   }
 
   logout() {
-    this.userStoreFacadeService.logout();
+    this.store.dispatch(UserActions.logout());
   }
 }

@@ -27,19 +27,13 @@ import { selfUpdateReducer } from '../store/reducers/self-update.reducers';
 import { userReducer } from '../store/reducers/user.reducers';
 import { HeaderComponent } from './components/header/header.component';
 import { WindowControlsComponent } from './components/window-controls/window-controls.component';
-import { SessionIdInterceptor } from './interceptors/session-id/session-id.interceptor';
-import { AppHttpService } from './services/app-http/app-http.service';
-import { AppStoreFacadeService } from './services/app-store-facade/app-store-facade.service';
-import { BackgroundService } from './services/background/background.service';
-import { ConfigHttpService } from './services/config-http/config-http.service';
-import { ConfigStoreFacadeService } from './services/config-store-facade/config-store-facade.service';
-import { IpcService } from './services/ipc/ipc.service';
-import { LayoutStoreFacadeService } from './services/layout-store-facade/layout-store-facade.service';
-import { NewsHttpService } from './services/news-http/news-http.service';
-import { NewsStoreFacadeService } from './services/news-store-facade/news-store-facade.service';
-import { SelfUpdateStoreFacadeService } from './services/self-update-store-facade/self-update-store-facade.service';
-import { UserHttpService } from './services/user-http/user-http.service';
-import { UserStoreFacadeService } from './services/user-store-facade/user-store-facade.service';
+import { SessionIdInterceptor } from './interceptors/session-id.interceptor';
+import { AppHttpService } from './services/app-http.service';
+import { BackgroundService } from './services/background.service';
+import { ConfigHttpService } from './services/config-http.service';
+import { IpcService } from './services/ipc.service';
+import { NewsHttpService } from './services/news-http.service';
+import { UserHttpService } from './services/user-http.service';
 import { MASTERSERVER_URL } from './injection-tokens';
 
 // AoT requires an exported function for factories
@@ -81,18 +75,11 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   declarations: [HeaderComponent, WindowControlsComponent],
   providers: [
     AppHttpService,
-    AppStoreFacadeService,
     BackgroundService,
     ConfigHttpService,
-    ConfigStoreFacadeService,
     IpcService,
-    LayoutStoreFacadeService,
     NewsHttpService,
-    NewsStoreFacadeService,
-    SelfUpdateStoreFacadeService,
     UserHttpService,
-    UserStoreFacadeService,
-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SessionIdInterceptor,
