@@ -75,19 +75,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "destrostudios-launcher:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "destrostudios-launcher:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "destrostudios-launcher:build:production"
+              "buildTarget": "destrostudios-launcher:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "destrostudios-launcher:build"
+            "buildTarget": "destrostudios-launcher:build"
           }
         },
         "lint": {
