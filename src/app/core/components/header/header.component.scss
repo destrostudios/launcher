@@ -19,7 +19,8 @@ img {
   margin-right: $baseline;
 }
 
-nav, .right {
+nav,
+.right {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,7 +35,8 @@ nav {
     color: $color-grey;
     text-decoration: none;
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       color: $color-white;
     }
   }

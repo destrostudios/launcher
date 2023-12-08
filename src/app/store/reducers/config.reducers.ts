@@ -1,39 +1,39 @@
-import {Action} from 'rxjs/internal/scheduler/Action';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
-import {createReducer, on} from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import * as ConfigActions from '../actions/config.actions';
-import {ConfigState} from '../state/config-state.model';
+import { ConfigState } from '../state/config-state.model';
 
 const initialState: ConfigState = {
-  clientConfigs: null
+  clientConfigs: null,
 };
 
 const reducer = createReducer(
   initialState,
-  on(ConfigActions.loadClientConfigs, state => ({
+  on(ConfigActions.loadClientConfigs, (state) => ({
     ...state,
     clientConfigs: {
       isLoading: true,
       data: null,
-      error: null
-    }
+      error: null,
+    },
   })),
   on(ConfigActions.loadClientConfigsSuccessful, (state, { configs }) => ({
     ...state,
     clientConfigs: {
       isLoading: false,
       data: configs,
-      error: null
-    }
+      error: null,
+    },
   })),
   on(ConfigActions.loadClientConfigsError, (state, { error }) => ({
     ...state,
     clientConfigs: {
       isLoading: false,
       data: null,
-      error
-    }
+      error,
+    },
   })),
 );
 

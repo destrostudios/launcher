@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import * as LayoutActions from '../../../store/actions/layout.actions';
 import {
@@ -9,15 +9,13 @@ import {
   isAppAdditionToAccountErrorShown,
   isAppRemovalFromAccountErrorShown,
   isHeaderShown,
-  isLoginOrRegistrationShown
+  isLoginOrRegistrationShown,
 } from '../../../store/selectors/layout.selectors';
-import {LayoutState} from '../../../store/state/layout-state.model';
+import { LayoutState } from '../../../store/state/layout-state.model';
 
 @Injectable()
 export class LayoutStoreFacadeService {
-
-  constructor(private store: Store<LayoutState>) {
-  }
+  constructor(private store: Store<LayoutState>) {}
 
   getLanguage(): Observable<string> {
     return this.store.select(getLanguage);

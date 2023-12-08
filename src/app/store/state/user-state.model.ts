@@ -1,5 +1,5 @@
-import {User} from '../../model/user.model';
-import {HttpData} from './http-data.model';
+import { User } from '../../model/user.model';
+import { HttpData } from './http-data.model';
 
 export interface UserState {
   readonly registration: HttpData<void>;

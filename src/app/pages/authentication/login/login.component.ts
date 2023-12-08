@@ -1,15 +1,18 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 
-import {PlainCredentials} from '../../../model/plain-credentials.model';
+import { PlainCredentials } from '../../../model/plain-credentials.model';
 
 @Component({
   selector: 'ds-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-
   @Input() isLoading: boolean;
   @Input() errorMessage: string;
   @Output() login = new EventEmitter<PlainCredentials>();
@@ -20,7 +23,7 @@ export class LoginComponent {
   constructor(formBuilder: UntypedFormBuilder) {
     this.loginForm = formBuilder.group({
       login: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 

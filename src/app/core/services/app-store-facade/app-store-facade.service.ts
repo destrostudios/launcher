@@ -1,12 +1,15 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
-import {App} from '../../../model/app.model';
-import {LocalAppVersion} from '../../../model/local-app-version.enum';
+import { App } from '../../../model/app.model';
+import { LocalAppVersion } from '../../../model/local-app-version.enum';
 import * as AppActions from '../../../store/actions/app.actions';
-import {getFeaturedApp, isSelectedAppOwned_Store} from '../../../store/selectors/aggregation.selectors';
+import {
+  getFeaturedApp,
+  isSelectedAppOwned_Store,
+} from '../../../store/selectors/aggregation.selectors';
 import {
   getLibrarySearchText,
   getSelectedApp_Library,
@@ -15,15 +18,13 @@ import {
   getSelectedApp_Library_UpdateProgressText,
   getSelectedApp_Store,
   getStoreApps,
-  isSomeLocalAppUpdating
+  isSomeLocalAppUpdating,
 } from '../../../store/selectors/app.selectors';
-import {AppState} from '../../../store/state/app-state.model';
+import { AppState } from '../../../store/state/app-state.model';
 
 @Injectable()
 export class AppStoreFacadeService {
-
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   getFeaturedApp(): Observable<App> {
     return this.store.select(getFeaturedApp);

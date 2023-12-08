@@ -1,9 +1,14 @@
 :not(input):not(textarea) {
-  &, &::before, &::after {
+  &,
+  &::before,
+  &::after {
     user-select: none;
   }
 }
 
-input, button, textarea, :focus {
+input,
+button,
+textarea,
+:focus {
   outline: none;
 }

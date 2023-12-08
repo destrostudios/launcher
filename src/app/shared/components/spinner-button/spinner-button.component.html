@@ -1,3 +1,13 @@
-<button *ngIf="!formGroup" (click)="action.emit()" [translate]="text" [disabled]="isLoading"></button>
-<input *ngIf="formGroup" type="submit" [value]="text | translate" [disabled]="isLoading">
+<button
+  *ngIf="!formGroup"
+  (click)="action.emit()"
+  [translate]="text"
+  [disabled]="isLoading"
+></button>
+<input
+  *ngIf="formGroup"
+  type="submit"
+  [value]="text | translate"
+  [disabled]="isLoading"
+/>
 <ds-loading-spinner *ngIf="isLoading" type="small"></ds-loading-spinner>

@@ -1,13 +1,13 @@
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
-import {AuthenticationComponent} from './pages/authentication/authentication.component';
-import {HomeComponent} from './pages/home/home.component';
-import {LibraryComponent} from './pages/library/library.component';
-import {OfflineComponent} from './pages/offline/offline.component';
-import {SelfUpdateComponent} from './pages/self-update/self-update.component';
-import {StoreComponent} from './pages/store/store.component';
-import {StoreAppComponent} from './pages/store-app/store-app.component';
+import { AuthenticationComponent } from './pages/authentication/authentication.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LibraryComponent } from './pages/library/library.component';
+import { OfflineComponent } from './pages/offline/offline.component';
+import { SelfUpdateComponent } from './pages/self-update/self-update.component';
+import { StoreComponent } from './pages/store/store.component';
+import { StoreAppComponent } from './pages/store-app/store-app.component';
 
 const routes: Routes = [
   { path: 'update', component: SelfUpdateComponent },
@@ -21,6 +21,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

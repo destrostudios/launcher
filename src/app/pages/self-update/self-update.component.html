@@ -1,6 +1,22 @@
 <main>
-  <h1 *ngIf="(isSelfUpdateAvailable | async) === null" translate="CHECKING_UPDATE"></h1>
-  <h1 *ngIf="(isSelfUpdateAvailable | async) && ((isSelfUpdateDownloaded | async) === false)" translate="DOWNLOADING_UPDATE"></h1>
-  <button *ngIf="isSelfUpdateDownloaded | async" translate="RESTART_AND_INSTALL" (click)="restartAndInstall()"></button>
-  <ds-loading-spinner *ngIf="(isSelfUpdateDownloaded | async) !== true" type="large"></ds-loading-spinner>
+  <h1
+    *ngIf="(isSelfUpdateAvailable | async) === null"
+    translate="CHECKING_UPDATE"
+  ></h1>
+  <h1
+    *ngIf="
+      (isSelfUpdateAvailable | async) &&
+      (isSelfUpdateDownloaded | async) === false
+    "
+    translate="DOWNLOADING_UPDATE"
+  ></h1>
+  <button
+    *ngIf="isSelfUpdateDownloaded | async"
+    translate="RESTART_AND_INSTALL"
+    (click)="restartAndInstall()"
+  ></button>
+  <ds-loading-spinner
+    *ngIf="(isSelfUpdateDownloaded | async) !== true"
+    type="large"
+  ></ds-loading-spinner>
 </main>

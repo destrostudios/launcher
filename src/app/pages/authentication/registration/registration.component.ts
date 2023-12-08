@@ -1,17 +1,20 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 
 import * as bcrypt from 'bcryptjs';
 
-import {Registration} from '../../../model/registration.model';
+import { Registration } from '../../../model/registration.model';
 
 @Component({
   selector: 'ds-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent {
-
   @Input() isLoading: boolean;
   @Input() errorMessage: string;
   @Output() login = new EventEmitter<void>();
@@ -22,7 +25,7 @@ export class RegistrationComponent {
   constructor(formBuilder: UntypedFormBuilder) {
     this.registrationForm = formBuilder.group({
       login: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 

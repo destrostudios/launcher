@@ -1,10 +1,14 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
-const {autoUpdater} = require('electron-updater');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const url = require('url');
 
-const {compareAppFiles, startApp, updateAppFiles} = require('./main/local-apps');
+const {
+  compareAppFiles,
+  startApp,
+  updateAppFiles,
+} = require('./main/local-apps');
 
 let mainWindow;
 
@@ -18,16 +22,16 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       // Fixes node-related issues, should be removable once we update all dependencies
-      contextIsolation: false
-    }
+      contextIsolation: false,
+    },
   });
 
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, '/index.html'),
       protocol: 'file:',
-      slashes: true
-    })
+      slashes: true,
+    }),
   );
 
   mainWindow.on('closed', () => {
@@ -60,15 +64,35 @@ app.on('activate', () => {
   }
 });
 
-autoUpdater.on('update-available', () => mainWindow.webContents.send('selfUpdateAvailable'));
-autoUpdater.on('update-not-available', () => mainWindow.webContents.send('selfUpdateNotAvailable'));
-autoUpdater.on('update-downloaded', () => mainWindow.webContents.send('selfUpdateDownloaded'));
+autoUpdater.on('update-available', () =>
+  mainWindow.webContents.send('selfUpdateAvailable'),
+);
+autoUpdater.on('update-not-available', () =>
+  mainWindow.webContents.send('selfUpdateNotAvailable'),
+);
+autoUpdater.on('update-downloaded', () =>
+  mainWindow.webContents.send('selfUpdateDownloaded'),
+);
 autoUpdater.on('error', () => mainWindow.webContents.send('selfUpdateError'));
 
 const userDataPath = app.getPath('userData');
 ipcMain.on('minimizeWindow', () => mainWindow.minimize());
 ipcMain.on('closeWindow', () => mainWindow.close());
 ipcMain.on('restartAndInstall', () => autoUpdater.quitAndInstall());
-ipcMain.on('compareAppFiles', (event, app, appFilesResponse) => compareAppFiles(event, app, appFilesResponse, userDataPath));
-ipcMain.on('updateAppFiles', (event, app, outdatedAppFiles, localFilesToBeDeleted) => updateAppFiles(event, app, outdatedAppFiles, localFilesToBeDeleted,userDataPath));
-ipcMain.on('startApp', (event, app, authToken) => startApp(event, app, authToken, userDataPath));
+ipcMain.on('compareAppFiles', (event, app, appFilesResponse) =>
+  compareAppFiles(event, app, appFilesResponse, userDataPath),
+);
+ipcMain.on(
+  'updateAppFiles',
+  (event, app, outdatedAppFiles, localFilesToBeDeleted) =>
+    updateAppFiles(
+      event,
+      app,
+      outdatedAppFiles,
+      localFilesToBeDeleted,
+      userDataPath,
+    ),
+);
+ipcMain.on('startApp', (event, app, authToken) =>
+  startApp(event, app, authToken, userDataPath),
+);

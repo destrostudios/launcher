@@ -1,9 +1,9 @@
 <header>
-  <img src="assets/images/logo.png" (auxclick)="onLogoClick($event)">
+  <img src="assets/images/logo.png" (auxclick)="onLogoClick($event)" />
   <nav>
     <a routerLink="/home" routerLinkActive="active" translate="HOME"></a>
     <a routerLink="/store" routerLinkActive="active" translate="STORE"></a>
     <a routerLink="/library" routerLinkActive="active" translate="LIBRARY"></a>
   </nav>
-  <div class="right" (click)="logout()">{{login | async}}</div>
+  <div class="right" (click)="logout()">{{ login | async }}</div>
 </header>

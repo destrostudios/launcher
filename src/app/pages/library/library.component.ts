@@ -1,20 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import {Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
-import {AppStoreFacadeService} from '../../core/services/app-store-facade/app-store-facade.service';
-import {BackgroundService} from '../../core/services/background/background.service';
-import {UserStoreFacadeService} from '../../core/services/user-store-facade/user-store-facade.service';
-import {App} from '../../model/app.model';
-import {LocalAppVersion} from '../../model/local-app-version.enum';
+import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
+import { BackgroundService } from '../../core/services/background/background.service';
+import { UserStoreFacadeService } from '../../core/services/user-store-facade/user-store-facade.service';
+import { App } from '../../model/app.model';
+import { LocalAppVersion } from '../../model/local-app-version.enum';
 
 @Component({
   selector: 'ds-library',
   templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss']
+  styleUrls: ['./library.component.scss'],
 })
 export class LibraryComponent implements OnInit, OnDestroy {
-
   LocalAppVersion = LocalAppVersion;
 
   hasOwnedApps: Observable<boolean>;
@@ -28,37 +27,45 @@ export class LibraryComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[];
 
-  constructor(private appStoreFacadeService: AppStoreFacadeService,
-              private userStoreFacadeService: UserStoreFacadeService,
-              private backgroundService: BackgroundService) {
-  }
+  constructor(
+    private appStoreFacadeService: AppStoreFacadeService,
+    private userStoreFacadeService: UserStoreFacadeService,
+    private backgroundService: BackgroundService,
+  ) {}
 
   ngOnInit(): void {
     this.hasOwnedApps = this.userStoreFacadeService.hasOwnedApps();
     this.librarySearchText = this.appStoreFacadeService.getLibrarySearchText();
     this.displayedApps = this.userStoreFacadeService.getDisplayedLibraryApps();
     this.selectedApp = this.appStoreFacadeService.getSelectedApp_Library();
-    this.selectedApp_LocalVersion = this.appStoreFacadeService.getSelectedApp_Library_LocalVersion();
-    this.selectedApp_UpdateProgressText = this.appStoreFacadeService.getSelectedApp_Library_UpdateProgressText();
-    this.selectedApp_IsStarting = this.appStoreFacadeService.getSelectedApp_Library_IsStarting();
-    this.isSomeLocalAppUpdating = this.appStoreFacadeService.isSomeLocalAppUpdating();
+    this.selectedApp_LocalVersion =
+      this.appStoreFacadeService.getSelectedApp_Library_LocalVersion();
+    this.selectedApp_UpdateProgressText =
+      this.appStoreFacadeService.getSelectedApp_Library_UpdateProgressText();
+    this.selectedApp_IsStarting =
+      this.appStoreFacadeService.getSelectedApp_Library_IsStarting();
+    this.isSomeLocalAppUpdating =
+      this.appStoreFacadeService.isSomeLocalAppUpdating();
 
     this.subscriptions = [
-      this.selectedApp.subscribe(selectedApp => {
+      this.selectedApp.subscribe((selectedApp) => {
         this.backgroundService.setApp(selectedApp);
       }),
     ];
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   getUpdateButtonText(localAppVersion: LocalAppVersion): string {
     switch (localAppVersion) {
-      case LocalAppVersion.CHECKING_UPDATE: return 'CHECKING_UPDATE';
-      case LocalAppVersion.OUTDATED: return 'UPDATE';
-      case LocalAppVersion.UPDATING: return 'UPDATING';
+      case LocalAppVersion.CHECKING_UPDATE:
+        return 'CHECKING_UPDATE';
+      case LocalAppVersion.OUTDATED:
+        return 'UPDATE';
+      case LocalAppVersion.UPDATING:
+        return 'UPDATING';
     }
     return null;
   }

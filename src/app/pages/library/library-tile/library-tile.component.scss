@@ -12,8 +12,9 @@
   cursor: pointer;
 }
 
-:host-context(.selected), :host:hover {
-  background-color: #FFF3;
+:host-context(.selected),
+:host:hover {
+  background-color: #fff3;
 }
 
 img {

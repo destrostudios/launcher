@@ -1,13 +1,17 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
-import {App} from '../../../model/app.model';
-import {PlainCredentials} from '../../../model/plain-credentials.model';
-import {Registration} from '../../../model/registration.model';
+import { App } from '../../../model/app.model';
+import { PlainCredentials } from '../../../model/plain-credentials.model';
+import { Registration } from '../../../model/registration.model';
 import * as UserActions from '../../../store/actions/user.actions';
-import {getDisplayedLibraryApps, hasOwnedApps, isLoginLoading} from '../../../store/selectors/aggregation.selectors';
+import {
+  getDisplayedLibraryApps,
+  hasOwnedApps,
+  isLoginLoading,
+} from '../../../store/selectors/aggregation.selectors';
 import {
   getLogin,
   getSessionId,
@@ -15,15 +19,13 @@ import {
   isAppRemovalFromAccountIncludingUpdateLoading,
   isRegistrationLoading,
   getLoginErrorMessage,
-  getRegistrationErrorMessage
+  getRegistrationErrorMessage,
 } from '../../../store/selectors/user.selectors';
-import {UserState} from '../../../store/state/user-state.model';
+import { UserState } from '../../../store/state/user-state.model';
 
 @Injectable()
 export class UserStoreFacadeService {
-
-  constructor(private store: Store<UserState>) {
-  }
+  constructor(private store: Store<UserState>) {}
 
   isRegistrationLoading(): Observable<boolean> {
     return this.store.select(isRegistrationLoading);

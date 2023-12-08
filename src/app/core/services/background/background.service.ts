@@ -1,13 +1,16 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {App} from '../../../model/app.model';
+import { App } from '../../../model/app.model';
 
 @Injectable()
 export class BackgroundService {
-
   setApp(app: App | null): void {
     if (app) {
-      this.setBackground('https://destrostudios.com/launcher/images/background_' + app.id + '.png');
+      this.setBackground(
+        'https://destrostudios.com/launcher/images/background_' +
+          app.id +
+          '.png',
+      );
     } else {
       this.reset();
     }
@@ -18,6 +21,6 @@ export class BackgroundService {
   }
 
   private setBackground(imageUrl: string): void {
-    document.body.style.backgroundImage = 'url(\'' + imageUrl + '\')';
+    document.body.style.backgroundImage = "url('" + imageUrl + "')";
   }
 }

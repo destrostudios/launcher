@@ -1,13 +1,13 @@
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spinner.component';
-import {ModalComponent} from './components/modal/modal.component';
-import {SpinnerButtonComponent} from './components/spinner-button/spinner-button.component';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { SpinnerButtonComponent } from './components/spinner-button/spinner-button.component';
 
 @NgModule({
   imports: [
@@ -16,12 +16,12 @@ import {SpinnerButtonComponent} from './components/spinner-button/spinner-button
     ReactiveFormsModule,
     RouterModule,
 
-    TranslateModule
+    TranslateModule,
   ],
   declarations: [
     LoadingSpinnerComponent,
     ModalComponent,
-    SpinnerButtonComponent
+    SpinnerButtonComponent,
   ],
   exports: [
     CommonModule,
@@ -32,7 +32,7 @@ import {SpinnerButtonComponent} from './components/spinner-button/spinner-button
 
     LoadingSpinnerComponent,
     ModalComponent,
-    SpinnerButtonComponent
-  ]
+    SpinnerButtonComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

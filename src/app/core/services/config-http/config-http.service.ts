@@ -1,20 +1,21 @@
-import {HttpClient} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-import {Configs} from '../../../model/configs.model';
-import {MASTERSERVER_URL} from '../../injection-tokens';
+import { Configs } from '../../../model/configs.model';
+import { MASTERSERVER_URL } from '../../injection-tokens';
 
 @Injectable()
 export class ConfigHttpService {
-
   constructor(
     private httpClient: HttpClient,
-    @Inject(MASTERSERVER_URL) private masterserverUrl: string
-  ) { }
+    @Inject(MASTERSERVER_URL) private masterserverUrl: string,
+  ) {}
 
   getClientConfigs(): Observable<Configs> {
-    return this.httpClient.get<Configs>(this.masterserverUrl + '/config/client');
+    return this.httpClient.get<Configs>(
+      this.masterserverUrl + '/config/client',
+    );
   }
 }

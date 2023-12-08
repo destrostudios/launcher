@@ -1,18 +1,24 @@
 <div class="left">
-  <img [src]="'https://destrostudios.com/launcher/images/tile_' + app.id + '.png'">
+  <img
+    [src]="'https://destrostudios.com/launcher/images/tile_' + app.id + '.png'"
+  />
   <a>Website</a>
   <a>YouTube</a>
   <a>Twitch</a>
   <a>Reddit</a>
 </div>
 <div class="center">
-  <h1>{{app.name}}</h1>
+  <h1>{{ app.name }}</h1>
   <ul class="info">
-    <li>{{app.date}}</li>
-    <li>{{app.developer.name}}</li>
-    <li><ng-container *ngFor="let genre of app.genres; let first = first">{{ (first ? '' : ', ') + genre.name }}</ng-container></li>
+    <li>{{ app.date }}</li>
+    <li>{{ app.developer.name }}</li>
+    <li>
+      <ng-container *ngFor="let genre of app.genres; let first = first">{{
+        (first ? '' : ', ') + genre.name
+      }}</ng-container>
+    </li>
   </ul>
-  <p>{{app.description}}</p>
+  <p>{{ app.description }}</p>
 </div>
 <div class="right">
   <ng-content></ng-content>

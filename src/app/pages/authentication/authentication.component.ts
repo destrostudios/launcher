@@ -1,23 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
-import {AppStoreFacadeService} from '../../core/services/app-store-facade/app-store-facade.service';
-import {BackgroundService} from '../../core/services/background/background.service';
-import {ConfigStoreFacadeService} from '../../core/services/config-store-facade/config-store-facade.service';
-import {LayoutStoreFacadeService} from '../../core/services/layout-store-facade/layout-store-facade.service';
-import {NewsStoreFacadeService} from '../../core/services/news-store-facade/news-store-facade.service';
-import {UserStoreFacadeService} from '../../core/services/user-store-facade/user-store-facade.service';
-import {PlainCredentials} from '../../model/plain-credentials.model';
-import {Registration} from '../../model/registration.model';
+import { AppStoreFacadeService } from '../../core/services/app-store-facade/app-store-facade.service';
+import { BackgroundService } from '../../core/services/background/background.service';
+import { ConfigStoreFacadeService } from '../../core/services/config-store-facade/config-store-facade.service';
+import { LayoutStoreFacadeService } from '../../core/services/layout-store-facade/layout-store-facade.service';
+import { NewsStoreFacadeService } from '../../core/services/news-store-facade/news-store-facade.service';
+import { UserStoreFacadeService } from '../../core/services/user-store-facade/user-store-facade.service';
+import { PlainCredentials } from '../../model/plain-credentials.model';
+import { Registration } from '../../model/registration.model';
 
 @Component({
   selector: 'ds-authentication',
   templateUrl: './authentication.component.html',
-  styleUrls: ['./authentication.component.scss']
+  styleUrls: ['./authentication.component.scss'],
 })
 export class AuthenticationComponent implements OnInit {
-
   isLoginOrRegistrationShown: Observable<boolean>;
   isLoginLoading: Observable<boolean>;
   isRegistrationLoading: Observable<boolean>;
@@ -25,20 +24,24 @@ export class AuthenticationComponent implements OnInit {
   registrationErrorMessage: Observable<string>;
   login: Observable<string>;
 
-  constructor(private layoutStoreFacadeService: LayoutStoreFacadeService,
-              private userStoreFacadeService: UserStoreFacadeService,
-              private configStoreFacadeService: ConfigStoreFacadeService,
-              private appStoreFacadeService: AppStoreFacadeService,
-              private newsStoreFacadeService: NewsStoreFacadeService,
-              private backgroundService: BackgroundService) {
-  }
+  constructor(
+    private layoutStoreFacadeService: LayoutStoreFacadeService,
+    private userStoreFacadeService: UserStoreFacadeService,
+    private configStoreFacadeService: ConfigStoreFacadeService,
+    private appStoreFacadeService: AppStoreFacadeService,
+    private newsStoreFacadeService: NewsStoreFacadeService,
+    private backgroundService: BackgroundService,
+  ) {}
 
   ngOnInit(): void {
-    this.isLoginOrRegistrationShown = this.layoutStoreFacadeService.isLoginOrRegistrationShown();
+    this.isLoginOrRegistrationShown =
+      this.layoutStoreFacadeService.isLoginOrRegistrationShown();
     this.isLoginLoading = this.userStoreFacadeService.isLoginLoading();
-    this.isRegistrationLoading = this.userStoreFacadeService.isRegistrationLoading();
+    this.isRegistrationLoading =
+      this.userStoreFacadeService.isRegistrationLoading();
     this.loginErrorMessage = this.userStoreFacadeService.getLoginErrorMessage();
-    this.registrationErrorMessage = this.userStoreFacadeService.getRegistrationErrorMessage();
+    this.registrationErrorMessage =
+      this.userStoreFacadeService.getRegistrationErrorMessage();
 
     this.backgroundService.reset();
 

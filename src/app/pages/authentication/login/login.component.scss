@@ -5,13 +5,14 @@
   width: 350px;
 }
 
-input[type=text], input[type=password] {
+input[type='text'],
+input[type='password'] {
   margin-bottom: $baseline;
 }
 
 .error {
   font-size: 14px;
-  color: #E00;
+  color: #e00;
 }
 
 .bottom {

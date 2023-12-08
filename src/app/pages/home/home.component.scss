@@ -17,7 +17,8 @@ main {
     color: $color-grey;
     text-decoration: none;
 
-    &:hover, &.selected {
+    &:hover,
+    &.selected {
       color: $color-white;
     }
 

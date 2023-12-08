@@ -9,28 +9,52 @@
         [placeholder]="'SEARCH' | translate"
         [value]="librarySearchText | async"
         (keyup)="setLibrarySearchText($event)"
-      >
+      />
       <ul>
-        <li *ngFor="let app of displayedApps" [ngClass]="{ 'selected' : app === (selectedApp | async) }">
-          <ds-library-tile [app]="app" (click)="selectApp(app)"></ds-library-tile>
+        <li
+          *ngFor="let app of displayedApps"
+          [ngClass]="{ selected: app === (selectedApp | async) }"
+        >
+          <ds-library-tile
+            [app]="app"
+            (click)="selectApp(app)"
+          ></ds-library-tile>
         </li>
       </ul>
     </div>
     <div class="app">
-      <ds-app-hub *ngIf="selectedApp | async as selectedApp" [app]="selectedApp">
+      <ds-app-hub
+        *ngIf="selectedApp | async as selectedApp"
+        [app]="selectedApp"
+      >
         <ds-spinner-button
-          *ngIf="(selectedApp_LocalVersion | async) === LocalAppVersion.UP_TO_DATE"
+          *ngIf="
+            (selectedApp_LocalVersion | async) === LocalAppVersion.UP_TO_DATE
+          "
           text="PLAY"
           [isLoading]="selectedApp_IsStarting | async"
           (action)="startApp(selectedApp.id)"
         ></ds-spinner-button>
         <button
-          *ngIf="(selectedApp_LocalVersion | async) !== LocalAppVersion.UP_TO_DATE"
-          [disabled]="((selectedApp_LocalVersion | async) !== LocalAppVersion.OUTDATED) || (isSomeLocalAppUpdating | async)"
+          *ngIf="
+            (selectedApp_LocalVersion | async) !== LocalAppVersion.UP_TO_DATE
+          "
+          [disabled]="
+            (selectedApp_LocalVersion | async) !== LocalAppVersion.OUTDATED ||
+            (isSomeLocalAppUpdating | async)
+          "
           (click)="updateApp(selectedApp.id)"
         >
-          {{ getUpdateButtonText(selectedApp_LocalVersion | async) | translate }}
-          <ng-container *ngIf="selectedApp_UpdateProgressText | async as selectedApp_UpdateProgressText">({{ selectedApp_UpdateProgressText }})</ng-container>
+          {{
+            getUpdateButtonText(selectedApp_LocalVersion | async) | translate
+          }}
+          <ng-container
+            *ngIf="
+              selectedApp_UpdateProgressText
+                | async as selectedApp_UpdateProgressText
+            "
+            >({{ selectedApp_UpdateProgressText }})</ng-container
+          >
         </button>
       </ds-app-hub>
     </div>

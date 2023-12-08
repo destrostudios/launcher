@@ -1,9 +1,9 @@
-import {Action} from 'rxjs/internal/scheduler/Action';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
-import {createReducer, on} from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
 import * as SelfUpdateActions from '../actions/self-update.actions';
-import {SelfUpdateState} from '../state/self-update-state.model';
+import { SelfUpdateState } from '../state/self-update-state.model';
 
 const initialState: SelfUpdateState = {
   isSelfUpdateAvailable: null,
@@ -15,15 +15,18 @@ const reducer = createReducer(
   on(SelfUpdateActions.setAvailable, (state, { isSelfUpdateAvailable }) => ({
     ...state,
     isSelfUpdateAvailable,
-    isSelfUpdateDownloaded: (isSelfUpdateAvailable ? false : null)
+    isSelfUpdateDownloaded: isSelfUpdateAvailable ? false : null,
   })),
   on(SelfUpdateActions.setDownloaded, (state, { isSelfUpdateDownloaded }) => ({
     ...state,
-    isSelfUpdateDownloaded
+    isSelfUpdateDownloaded,
   })),
 );
 
-// @ts-ignore
-export function selfUpdateReducer(state: SelfUpdateState | undefined, action: Action) {
+export function selfUpdateReducer(
+  state: SelfUpdateState | undefined,
+  // @ts-ignore
+  action: Action,
+) {
   return reducer(state, action);
 }

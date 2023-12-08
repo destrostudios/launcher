@@ -4,7 +4,9 @@
 
 @import './styles/disable-user-select';
 
-html, body, main {
+html,
+body,
+main {
   height: 100%;
 }
 
@@ -12,7 +14,9 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -24,7 +28,12 @@ body {
   transition: background 200ms;
 }
 
-body, input[type=text], input[type=password], input[type=submit], textarea, button {
+body,
+input[type='text'],
+input[type='password'],
+input[type='submit'],
+textarea,
+button {
   font-family: 'Open Sans', Tahoma, sans-serif;
   font-size: 16px;
   color: $color-grey;
@@ -37,7 +46,8 @@ main {
 a {
   cursor: pointer;
 
-  &, &:visited {
+  &,
+  &:visited {
     color: $color-white;
     text-decoration: underline;
   }
@@ -47,7 +57,8 @@ a {
   }
 }
 
-h1, h2 {
+h1,
+h2 {
   margin-top: 0;
   margin-bottom: $baseline;
   color: $color-white;
@@ -87,7 +98,8 @@ li {
   }
 
   a:not(:hover) {
-    &, &:visited {
+    &,
+    &:visited {
       color: $color-dark-grey;
     }
   }
@@ -108,7 +120,11 @@ label {
 }
 
 $input-height: 44px;
-input[type=text], input[type=password], input[type=submit], textarea, button {
+input[type='text'],
+input[type='password'],
+input[type='submit'],
+textarea,
+button {
   height: $input-height;
   min-height: $input-height;
   padding-left: $baseline;
@@ -117,13 +133,16 @@ input[type=text], input[type=password], input[type=submit], textarea, button {
   border-radius: 5px;
 
   &:disabled {
-    &, &:hover {
+    &,
+    &:hover {
       color: $color-grey;
     }
   }
 }
 
-input[type=text], input[type=password], textarea {
+input[type='text'],
+input[type='password'],
+textarea {
   width: 100%;
   background: #111117;
   color: $color-grey;
@@ -141,10 +160,11 @@ textarea {
   vertical-align: bottom;
 }
 
-input[type=submit], button {
+input[type='submit'],
+button {
   padding-left: $baseline * 1.5;
   padding-right: $baseline * 1.5;
-  background: #FBFBFB;
+  background: #fbfbfb;
   border-color: #111117;
   color: #111117;
   cursor: pointer;
