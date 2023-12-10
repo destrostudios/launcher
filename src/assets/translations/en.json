@@ -16,6 +16,7 @@
   "EMAIL": "E-Mail",
   "EMAIL_ALREADY_EXISTS": "E-Mail already exists",
   "EMAIL_NOT_CONFIRMED": "E-Mail not confirmed",
+  "EMAIL_NOT_SENT": "E-Mail could not be sent",
   "FEATURED": "Featured",
   "FORGOT_PASSWORD": "Forgot your password?",
   "HOME": "Home",
