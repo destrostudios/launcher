@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { News } from '../../model/news.model';
+import { News } from '../../interfaces/news.interface';
 
 export const loadLatestNews = createAction('[News] Load latest news');
 export const loadLatestNewsSuccessful = createAction(

@@ -19,7 +19,7 @@ import {
   getOutdatedAppFiles,
   getPreselectedApp,
 } from '../../core/util/app.util';
-import { LocalAppVersion } from '../../model/local-app-version.enum';
+import { LocalAppVersion } from '../../interfaces/local-app-version.enum';
 import * as AppActions from '../actions/app.actions';
 import * as UserActions from '../actions/user.actions';
 import { getDisplayedLibraryApps } from '../selectors/aggregation.selectors';
@@ -29,6 +29,7 @@ import {
   getSelectedApp_Library,
   getStartingAppId,
 } from '../selectors/app.selectors';
+import { getAuthToken } from '../selectors/user.selectors';
 
 @Injectable()
 export class AppEffects {
@@ -182,37 +183,19 @@ export class AppEffects {
       withLatestFrom(
         this.store.select(getStartingAppId),
         this.store.select(getLocalApps),
+        this.store.select(getApps),
+        this.store.select(getAuthToken),
       ),
-      switchMap(([{ appId }, startingAppId, localApps]) => {
+      switchMap(([{ appId }, startingAppId, localApps, apps, authToken]) => {
         if (appId === startingAppId) {
           const localApp = getLocalApp(localApps, appId);
           if (localApp.version === LocalAppVersion.UP_TO_DATE) {
-            return of(UserActions.loadAuthToken());
+            const app = getApp(apps, startingAppId);
+            this.ipcService.send('startApp', app, authToken);
+            return of(AppActions.setAppNotStarting());
           }
         }
         return EMPTY;
-      }),
-    ),
-  );
-
-  cancelAppStartOnLoadingAuthTokenError = createEffect(() =>
-    this.actions.pipe(
-      ofType(UserActions.loadAuthTokenError),
-      map(() => AppActions.setAppNotStarting()),
-    ),
-  );
-
-  executeStartingAppWithAuthToken = createEffect(() =>
-    this.actions.pipe(
-      ofType(UserActions.loadAuthTokenSuccessful),
-      withLatestFrom(
-        this.store.select(getStartingAppId),
-        this.store.select(getApps),
-      ),
-      map(([{ authToken }, startingAppId, apps]) => {
-        const app = getApp(apps, startingAppId);
-        this.ipcService.send('startApp', app, authToken);
-        return AppActions.setAppNotStarting();
       }),
     ),
   );

@@ -6,6 +6,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
+import { getErrorCode } from '../../core/util/error.util';
+import { ErrorCode } from '../../interfaces/error-code.enum';
 import * as AppActions from '../actions/app.actions';
 import * as ConfigActions from '../actions/config.actions';
 import * as LayoutActions from '../actions/layout.actions';
@@ -45,12 +47,12 @@ export class LayoutEffects {
     ),
   );
 
-  navigateToAuthenticationWhenNoSelfUpdateAvailable = createEffect(() =>
+  navigateToLoginWhenNoSelfUpdateAvailable = createEffect(() =>
     this.actions.pipe(
       ofType(SelfUpdateActions.setAvailable),
       switchMap(({ isSelfUpdateAvailable }) => {
         if (!isSelfUpdateAvailable) {
-          return of(LayoutActions.navigate({ route: 'authentication' }));
+          return of(LayoutActions.navigate({ route: 'authentication/login' }));
         }
         return EMPTY;
       }),
@@ -62,11 +64,45 @@ export class LayoutEffects {
       ofType(
         ConfigActions.loadClientConfigsError,
         AppActions.loadAppsError,
-        NewsActions.loadLatestNewsError,
         AppActions.loadAppFilesError,
+        NewsActions.loadLatestNewsError,
       ),
       map(() => LayoutActions.navigate({ route: 'offline' })),
     ),
+  );
+
+  navigateToLoginAfterRegistrationOrPasswordReset = createEffect(() =>
+    this.actions.pipe(
+      ofType(
+        UserActions.registrationSuccessful,
+        UserActions.resetPasswordSuccessful,
+      ),
+      map(() => LayoutActions.navigate({ route: 'authentication/login' })),
+    ),
+  );
+
+  navigateToConfirmEmailAfterEmailNotConfirmed = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.loginError),
+      switchMap(({ error }) => {
+        if (getErrorCode(error) === ErrorCode.EMAIL_NOT_CONFIRMED) {
+          return of(
+            LayoutActions.navigate({ route: 'authentication/confirmEmail' }),
+          );
+        }
+        return EMPTY;
+      }),
+    ),
+  );
+
+  navigateToResetPasswordAfterSendResetPasswordEmailSuccessful = createEffect(
+    () =>
+      this.actions.pipe(
+        ofType(UserActions.sendPasswordResetEmailSuccessful),
+        map(() =>
+          LayoutActions.navigate({ route: 'authentication/resetPassword' }),
+        ),
+      ),
   );
 
   navigateToHomeAfterLogin = createEffect(() =>
@@ -76,10 +112,10 @@ export class LayoutEffects {
     ),
   );
 
-  navigateToAuthenticationAfterLogout = createEffect(() =>
+  navigateToLoginAfterLogout = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.logout),
-      map(() => LayoutActions.navigate({ route: 'authentication' })),
+      map(() => LayoutActions.navigate({ route: 'authentication/login' })),
     ),
   );
 

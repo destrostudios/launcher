@@ -1,0 +1,10 @@
+<ds-form
+  formTitle="CONFIRM_EMAIL_ADDRESS"
+  description="CONFIRM_EMAIL_ADDRESS_DESCRIPTION"
+  [inputs]="inputs"
+  [links]="links"
+  submitTitle="CONFIRM"
+  [isLoading]="isConfirmationLoading | async"
+  [errorMessage]="errorMessage | async"
+  (submitForm)="confirmEmail($event)"
+></ds-form>

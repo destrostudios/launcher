@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Configs } from '../../model/configs.model';
+import { Configs } from '../.././interfaces/configs.interface';
 import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()

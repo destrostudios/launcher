@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Configs } from '../../model/configs.model';
+import { Configs } from '../../interfaces/configs.interface';
 
 export const loadClientConfigs = createAction('[Config] Load client configs');
 export const loadClientConfigsSuccessful = createAction(

@@ -7,7 +7,6 @@ import { NgModule } from '@angular/core';
 
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -27,7 +26,7 @@ import { selfUpdateReducer } from '../store/reducers/self-update.reducers';
 import { userReducer } from '../store/reducers/user.reducers';
 import { HeaderComponent } from './components/header/header.component';
 import { WindowControlsComponent } from './components/window-controls/window-controls.component';
-import { SessionIdInterceptor } from './interceptors/session-id.interceptor';
+import { AuthTokenInterceptor } from './interceptors/auth-token.interceptor';
 import { AppHttpService } from './services/app-http.service';
 import { BackgroundService } from './services/background.service';
 import { ConfigHttpService } from './services/config-http.service';
@@ -60,7 +59,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
       SelfUpdateEffects,
       UserEffects,
     ]),
-    StoreDevtoolsModule.instrument({ maxAge: 50 }),
 
     TranslateModule.forRoot({
       loader: {
@@ -82,7 +80,7 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
     UserHttpService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: SessionIdInterceptor,
+      useClass: AuthTokenInterceptor,
       multi: true,
     },
     {

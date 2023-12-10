@@ -3,7 +3,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { createReducer, on } from '@ngrx/store';
 
 import * as ConfigActions from '../actions/config.actions';
-import { ConfigState } from '../state/config-state.model';
+import { ConfigState } from '../state/config-state.interface';
 
 const initialState: ConfigState = {
   clientConfigs: null,

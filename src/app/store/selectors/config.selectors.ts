@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { ConfigState } from '../state/config-state.model';
+import { ConfigState } from '../state/config-state.interface';
 
 const getConfigState = createFeatureSelector<ConfigState>('config');
 

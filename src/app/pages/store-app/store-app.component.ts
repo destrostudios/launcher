@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
 import { BackgroundService } from '../../core/services/background.service';
-import { App } from '../../model/app.model';
+import { App } from '../../interfaces/app.interface';
 import * as AppActions from '../../store/actions/app.actions';
 import * as LayoutActions from '../../store/actions/layout.actions';
 import * as UserActions from '../../store/actions/user.actions';

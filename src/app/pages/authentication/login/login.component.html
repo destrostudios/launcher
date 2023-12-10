@@ -1,18 +1,8 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <label for="login">Login</label>
-  <input id="login" formControlName="login" type="text" autocomplete="off" />
-  <label for="password">Password</label>
-  <input id="password" formControlName="password" type="password" />
-  <div *ngIf="errorMessage" class="error" [translate]="errorMessage"></div>
-  <div class="bottom">
-    <ds-spinner-button
-      [formGroup]="loginForm"
-      text="LOGIN"
-      [isLoading]="isLoading"
-    ></ds-spinner-button>
-    <div class="separator"></div>
-    <a translate="REGISTER" (click)="register.emit()"></a>
-    <div class="separator"></div>
-    <a translate="FORGOT_PASSWORD"></a>
-  </div>
-</form>
+<ds-form
+  [inputs]="inputs"
+  [links]="links"
+  submitTitle="LOGIN"
+  [isLoading]="isLoading | async"
+  [errorMessage]="errorMessage | async"
+  (submitForm)="login($event)"
+></ds-form>

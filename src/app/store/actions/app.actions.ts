@@ -1,9 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
-import { App } from '../../model/app.model';
-import { AppFilesResponse } from '../../model/app-files-response.model';
+import { App } from '../../interfaces/app.interface';
+import { AppFilesResponse } from '../../interfaces/app-files-response.interface';
 
-// tslint:disable:max-line-length
 export const loadApps = createAction('[App] Load apps');
 export const loadAppsSuccessful = createAction(
   '[App] Load apps successful',
@@ -71,4 +70,3 @@ export const setUpdateFinished = createAction(
 export const toggleHiddenAppsInStore = createAction(
   '[App] Toggle hidden apps in store',
 );
-// tslint:enable:max-line-length

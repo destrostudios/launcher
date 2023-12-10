@@ -3,7 +3,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { createReducer, on } from '@ngrx/store';
 
 import * as NewsActions from '../actions/news.actions';
-import { NewsState } from '../state/news-state.model';
+import { NewsState } from '../state/news-state.interface';
 
 const initialState: NewsState = {
   latestNews: null,

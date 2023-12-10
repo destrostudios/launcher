@@ -8,8 +8,6 @@ export const navigate = createAction(
   '[Layout] Navigate',
   props<{ route: string }>(),
 );
-export const openLogin = createAction('[Layout] Open login');
-export const openRegistration = createAction('[Layout] Open registration');
 export const showAppAdditionToAccountError = createAction(
   '[Layout] Show app addition to account error',
 );

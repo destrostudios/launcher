@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { LayoutState } from '../state/layout-state.model';
+import { LayoutState } from '../state/layout-state.interface';
 
 const getLayoutState = createFeatureSelector<LayoutState>('layout');
 
@@ -14,12 +14,9 @@ const getRoute = createSelector(getLayoutState, (state) => state.route);
 export const isHeaderShown = createSelector(
   getRoute,
   (route) =>
-    route !== 'update' && route !== 'authentication' && route !== 'offline',
-);
-
-export const isLoginOrRegistrationShown = createSelector(
-  getLayoutState,
-  (state) => state.isLoginOrRegistrationShown,
+    route !== 'update' &&
+    !route.startsWith('authentication/') &&
+    route !== 'offline',
 );
 
 export const isAppAdditionToAccountErrorShown = createSelector(

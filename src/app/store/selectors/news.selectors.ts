@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { NewsState } from '../state/news-state.model';
+import { NewsState } from '../state/news-state.interface';
 
 const getNewsState = createFeatureSelector<NewsState>('news');
 

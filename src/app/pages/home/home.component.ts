@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { BackgroundService } from '../../core/services/background.service';
-import { News } from '../../model/news.model';
+import { News } from '../../interfaces/news.interface';
 import * as LayoutActions from '../../store/actions/layout.actions';
 import { getLanguage } from '../../store/selectors/layout.selectors';
 import { getLatestNews } from '../../store/selectors/news.selectors';

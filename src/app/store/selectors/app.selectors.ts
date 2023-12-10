@@ -1,8 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { getApp, getLocalApp } from '../../core/util/app.util';
-import { LocalAppVersion } from '../../model/local-app-version.enum';
-import { AppState } from '../state/app-state.model';
+import { LocalAppVersion } from '../../interfaces/local-app-version.enum';
+import { AppState } from '../state/app-state.interface';
 
 const getUserState = createFeatureSelector<AppState>('app');
 

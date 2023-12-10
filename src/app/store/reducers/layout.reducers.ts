@@ -3,12 +3,11 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { createReducer, on } from '@ngrx/store';
 
 import * as LayoutActions from '../actions/layout.actions';
-import { LayoutState } from '../state/layout-state.model';
+import { LayoutState } from '../state/layout-state.interface';
 
 const initialState: LayoutState = {
   language: 'en',
   route: null,
-  isLoginOrRegistrationShown: true,
   isAppAdditionToAccountErrorShown: false,
   isAppRemovalFromAccountErrorShown: false,
 };
@@ -20,14 +19,6 @@ const reducer = createReducer(
     language,
   })),
   on(LayoutActions.navigate, (state, { route }) => ({ ...state, route })),
-  on(LayoutActions.openLogin, (state) => ({
-    ...state,
-    isLoginOrRegistrationShown: true,
-  })),
-  on(LayoutActions.openRegistration, (state) => ({
-    ...state,
-    isLoginOrRegistrationShown: false,
-  })),
   on(LayoutActions.showAppAdditionToAccountError, (state) => ({
     ...state,
     isAppAdditionToAccountErrorShown: true,

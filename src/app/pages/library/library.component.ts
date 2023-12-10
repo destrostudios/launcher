@@ -4,8 +4,8 @@ import { Observable, Subscription } from 'rxjs';
 
 import { Store } from '@ngrx/store';
 import { BackgroundService } from '../../core/services/background.service';
-import { App } from '../../model/app.model';
-import { LocalAppVersion } from '../../model/local-app-version.enum';
+import { App } from '../../interfaces/app.interface';
+import { LocalAppVersion } from '../../interfaces/local-app-version.enum';
 import * as AppActions from '../../store/actions/app.actions';
 import {
   getDisplayedLibraryApps,

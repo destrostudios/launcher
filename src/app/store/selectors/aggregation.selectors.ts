@@ -12,13 +12,13 @@ import { areLatestNewsLoading } from './news.selectors';
 import {
   getCurrentUser,
   getOwnedAppIds,
+  isAuthTokenLoading,
   isSaltClientLoading,
-  isSessionIdLoading,
 } from './user.selectors';
 
 export const isLoginLoading = createSelector(
   isSaltClientLoading,
-  isSessionIdLoading,
+  isAuthTokenLoading,
   getCurrentUser,
   areClientConfigsLoading,
   areLatestNewsLoading,

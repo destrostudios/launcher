@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { News } from '../../../model/news.model';
+import { News } from '../../../interfaces/news.interface';
 
 @Component({
   selector: 'ds-news',

@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { AppHubComponent } from './components/app-hub/app-hub.component';
+import { FormComponent } from './components/form/form.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { SpinnerButtonComponent } from './components/spinner-button/spinner-button.component';
@@ -19,6 +21,8 @@ import { SpinnerButtonComponent } from './components/spinner-button/spinner-butt
     TranslateModule,
   ],
   declarations: [
+    AppHubComponent,
+    FormComponent,
     LoadingSpinnerComponent,
     ModalComponent,
     SpinnerButtonComponent,
@@ -30,6 +34,8 @@ import { SpinnerButtonComponent } from './components/spinner-button/spinner-butt
     RouterModule,
     TranslateModule,
 
+    AppHubComponent,
+    FormComponent,
     LoadingSpinnerComponent,
     ModalComponent,
     SpinnerButtonComponent,

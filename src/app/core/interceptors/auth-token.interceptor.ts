@@ -10,23 +10,23 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { first, mergeMap } from 'rxjs/operators';
 
-import { getSessionId } from '../../store/selectors/user.selectors';
+import { getAuthToken } from '../../store/selectors/user.selectors';
 
 @Injectable()
-export class SessionIdInterceptor implements HttpInterceptor {
+export class AuthTokenInterceptor implements HttpInterceptor {
   constructor(public store: Store) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    return this.store.select(getSessionId).pipe(
+    return this.store.select(getAuthToken).pipe(
       first(),
-      mergeMap((sessionId) => {
-        if (sessionId != null) {
+      mergeMap((authToken) => {
+        if (authToken != null) {
           request = request.clone({
             setHeaders: {
-              sessionId,
+              Authorization: 'Bearer ' + authToken,
             },
           });
         }

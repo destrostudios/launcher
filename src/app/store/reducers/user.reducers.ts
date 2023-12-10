@@ -3,17 +3,23 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { createReducer, on } from '@ngrx/store';
 
 import * as UserActions from '../actions/user.actions';
-import { UserState } from '../state/user-state.model';
+import { UserState } from '../state/user-state.interface';
 
 const initialState: UserState = {
+  authenticationLogin: null,
+  authenticationPassword: null,
+  authenticationEmailSecret: null,
   registration: null,
   saltClient: null,
-  sessionId: null,
+  authToken: null,
+  sendEmailConfirmationEmail: null,
+  confirmEmail: null,
+  sendPasswordResetEmail: null,
+  resetPassword: null,
   user: null,
   currentUser: null,
   appAdditionToAccount: null,
   appRemovalFromAccount: null,
-  authToken: null,
 };
 
 const reducer = createReducer(
@@ -42,8 +48,14 @@ const reducer = createReducer(
       error,
     },
   })),
-  on(UserActions.startLoginProcess, (state) => ({
+  on(UserActions.clearRegistration, (state) => ({
     ...state,
+    registration: null,
+  })),
+  on(UserActions.startLoginProcess, (state, { login, password }) => ({
+    ...state,
+    authenticationLogin: login,
+    authenticationPassword: password,
     saltClient: {
       isLoading: true,
       data: null,
@@ -68,27 +80,174 @@ const reducer = createReducer(
   })),
   on(UserActions.login, (state) => ({
     ...state,
-    sessionId: {
+    authToken: {
       isLoading: true,
       data: null,
       error: null,
     },
   })),
-  on(UserActions.loginSuccessful, (state, { sessionId }) => ({
+  on(UserActions.loginSuccessful, (state, { authToken }) => ({
     ...state,
-    sessionId: {
+    authToken: {
       isLoading: false,
-      data: sessionId,
+      data: authToken,
       error: null,
     },
   })),
   on(UserActions.loginError, (state, { error }) => ({
     ...state,
-    sessionId: {
+    authToken: {
       isLoading: false,
       data: null,
       error,
     },
+  })),
+  on(UserActions.clearLogin, (state) => ({
+    ...state,
+    saltClient: null,
+    authToken: state.authToken?.data ? state.authToken : null,
+  })),
+  on(UserActions.sendEmailConfirmationEmail, (state) => ({
+    ...state,
+    sendEmailConfirmationEmail: {
+      isLoading: true,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.sendEmailConfirmationEmailSuccessful, (state) => ({
+    ...state,
+    sendEmailConfirmationEmail: {
+      isLoading: false,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.sendEmailConfirmationEmailError, (state, { error }) => ({
+    ...state,
+    sendEmailConfirmationEmail: {
+      isLoading: false,
+      data: null,
+      error,
+    },
+  })),
+  on(UserActions.confirmEmail, (state) => ({
+    ...state,
+    confirmEmail: {
+      isLoading: true,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.confirmEmailSuccessful, (state) => ({
+    ...state,
+    confirmEmail: {
+      isLoading: false,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.confirmEmailError, (state, { error }) => ({
+    ...state,
+    confirmEmail: {
+      isLoading: false,
+      data: null,
+      error,
+    },
+  })),
+  on(UserActions.clearConfirmEmail, (state) => ({
+    ...state,
+    confirmEmail: null,
+  })),
+  on(UserActions.sendPasswordResetEmail, (state, { login }) => ({
+    ...state,
+    authenticationLogin: login,
+    sendPasswordResetEmail: {
+      isLoading: true,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.sendPasswordResetEmailSuccessful, (state) => ({
+    ...state,
+    sendPasswordResetEmail: {
+      isLoading: false,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.sendPasswordResetEmailError, (state, { error }) => ({
+    ...state,
+    sendPasswordResetEmail: {
+      isLoading: false,
+      data: null,
+      error,
+    },
+  })),
+  on(UserActions.clearSendPasswordResetEmail, (state) => ({
+    ...state,
+    sendPasswordResetEmail: null,
+  })),
+  on(
+    UserActions.startResetPasswordProcess,
+    (state, { password, emailSecret }) => ({
+      ...state,
+      authenticationPassword: password,
+      authenticationEmailSecret: emailSecret,
+      saltClient: {
+        isLoading: true,
+        data: null,
+        error: null,
+      },
+    }),
+  ),
+  on(
+    UserActions.startResetPasswordProcessSuccessful,
+    (state, { saltClient }) => ({
+      ...state,
+      saltClient: {
+        isLoading: false,
+        data: saltClient,
+        error: null,
+      },
+    }),
+  ),
+  on(UserActions.startResetPasswordProcessError, (state, { error }) => ({
+    ...state,
+    saltClient: {
+      isLoading: false,
+      data: null,
+      error,
+    },
+  })),
+  on(UserActions.resetPassword, (state) => ({
+    ...state,
+    resetPassword: {
+      isLoading: true,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.resetPasswordSuccessful, (state) => ({
+    ...state,
+    resetPassword: {
+      isLoading: false,
+      data: null,
+      error: null,
+    },
+  })),
+  on(UserActions.resetPasswordError, (state, { error }) => ({
+    ...state,
+    resetPassword: {
+      isLoading: false,
+      data: null,
+      error,
+    },
+  })),
+  on(UserActions.clearResetPassword, (state) => ({
+    ...state,
+    saltClient: null,
+    resetPassword: null,
   })),
   on(UserActions.loadUser, (state) => ({
     ...state,
@@ -117,8 +276,9 @@ const reducer = createReducer(
   })),
   on(UserActions.logout, (state) => ({
     ...state,
+    authenticationLogin: null,
     saltClient: null,
-    sessionId: null,
+    authToken: null,
     user: null,
     currentUser: null,
   })),
@@ -165,30 +325,6 @@ const reducer = createReducer(
   on(UserActions.removeAppFromAccountError, (state, { error }) => ({
     ...state,
     appRemovalFromAccount: {
-      isLoading: false,
-      data: null,
-      error,
-    },
-  })),
-  on(UserActions.loadAuthToken, (state) => ({
-    ...state,
-    authToken: {
-      isLoading: true,
-      data: null,
-      error: null,
-    },
-  })),
-  on(UserActions.loadAuthTokenSuccessful, (state, { authToken }) => ({
-    ...state,
-    authToken: {
-      isLoading: false,
-      data: authToken,
-      error: null,
-    },
-  })),
-  on(UserActions.loadAuthTokenError, (state, { error }) => ({
-    ...state,
-    authToken: {
       isLoading: false,
       data: null,
       error,

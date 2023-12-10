@@ -3,9 +3,10 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
-import { Registration } from '../../model/registration.model';
-import { SafeCredentials } from '../../model/safe-credentials.model';
-import { User } from '../../model/user.model';
+import { LoginDto } from '../../interfaces/login.dto.interface';
+import { RegistrationDto } from '../../interfaces/registration.dto.interface';
+import { ResetPasswordDto } from '../../interfaces/reset-password.dto.interface';
+import { User } from '../../interfaces/user.interface';
 import { MASTERSERVER_URL } from '../injection-tokens';
 
 @Injectable()
@@ -15,36 +16,75 @@ export class UserHttpService {
     @Inject(MASTERSERVER_URL) private masterserverUrl: string,
   ) {}
 
-  register(registration: Registration): Observable<void> {
+  register(registrationDto: RegistrationDto): Observable<void> {
     return this.httpClient.post<void>(
       this.masterserverUrl + '/users/register',
-      registration,
+      registrationDto,
     );
   }
 
   getSaltClient(login: string): Observable<string> {
-    return this.httpClient.post(
-      this.masterserverUrl + '/users/saltClient',
-      login,
+    return this.httpClient.get(
+      this.masterserverUrl +
+        '/users/' +
+        encodeURIComponent(login) +
+        '/saltClient',
       { responseType: 'text' },
     );
   }
 
-  login(safeCredentials: SafeCredentials): Observable<string> {
+  login(loginDto: LoginDto): Observable<string> {
     return this.httpClient.post(
       this.masterserverUrl + '/users/login',
-      safeCredentials,
+      loginDto,
       { responseType: 'text' },
     );
   }
 
-  getUser(): Observable<User> {
-    return this.httpClient.get<User>(this.masterserverUrl + '/users/bySession');
+  sendEmailConfirmationEmail(login: string): Observable<void> {
+    return this.httpClient.post<void>(
+      this.masterserverUrl +
+        '/users/' +
+        encodeURIComponent(login) +
+        '/sendEmailConfirmationEmail',
+      null,
+    );
   }
 
-  getAuthToken(): Observable<string> {
-    return this.httpClient.get(this.masterserverUrl + '/authToken', {
-      responseType: 'text',
-    });
+  confirmEmail(login: string, emailSecret: string): Observable<void> {
+    return this.httpClient.post<void>(
+      this.masterserverUrl +
+        '/users/' +
+        encodeURIComponent(login) +
+        '/confirmEmail',
+      emailSecret,
+    );
+  }
+
+  sendPasswordResetEmail(login: string): Observable<void> {
+    return this.httpClient.post<void>(
+      this.masterserverUrl +
+        '/users/' +
+        encodeURIComponent(login) +
+        '/sendPasswordResetEmail',
+      null,
+    );
+  }
+
+  resetPassword(
+    login: string,
+    resetPasswordDto: ResetPasswordDto,
+  ): Observable<void> {
+    return this.httpClient.post<void>(
+      this.masterserverUrl +
+        '/users/' +
+        encodeURIComponent(login) +
+        '/resetPassword',
+      resetPasswordDto,
+    );
+  }
+
+  getUser(userId: number): Observable<User> {
+    return this.httpClient.get<User>(this.masterserverUrl + '/users/' + userId);
   }
 }

@@ -1,41 +1,70 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
 import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
-
-import * as bcrypt from 'bcryptjs';
-
-import { Registration } from '../../../model/registration.model';
+  FormInput,
+  FormLink,
+  FormValues,
+} from '../../../interfaces/form.interface';
+import * as LayoutActions from '../../../store/actions/layout.actions';
+import * as UserActions from '../../../store/actions/user.actions';
+import {
+  getRegistrationErrorMessage,
+  isRegistrationLoading,
+} from '../../../store/selectors/user.selectors';
 
 @Component({
   selector: 'ds-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent {
-  @Input() isLoading: boolean;
-  @Input() errorMessage: string;
-  @Output() login = new EventEmitter<void>();
-  @Output() register = new EventEmitter<Registration>();
+export class RegistrationComponent implements OnInit, OnDestroy {
+  inputs: FormInput[];
+  links: FormLink[];
+  isLoading: Observable<boolean>;
+  errorMessage: Observable<string>;
 
-  registrationForm: UntypedFormGroup;
+  constructor(private store: Store) {}
 
-  constructor(formBuilder: UntypedFormBuilder) {
-    this.registrationForm = formBuilder.group({
-      login: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+  ngOnInit(): void {
+    this.inputs = [
+      {
+        name: 'login',
+        title: 'LOGIN',
+        type: 'text',
+        config: ['', Validators.required],
+      },
+      {
+        name: 'email',
+        title: 'EMAIL',
+        type: 'text',
+        config: ['', Validators.required],
+      },
+      {
+        name: 'password',
+        title: 'PASSWORD',
+        type: 'password',
+        config: ['', Validators.required],
+      },
+    ];
+    this.links = [{ title: 'BACK', action: () => this.navigateToLogin() }];
+    this.isLoading = this.store.select(isRegistrationLoading);
+    this.errorMessage = this.store.select(getRegistrationErrorMessage);
   }
 
-  onSubmit(): void {
-    if (this.registrationForm.valid) {
-      const login = this.registrationForm.controls.login.value;
-      const password = this.registrationForm.controls.password.value;
-      const saltClient = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, saltClient);
-      this.register.emit({ login, saltClient, hashedPassword });
-    }
+  navigateToLogin(): void {
+    this.store.dispatch(
+      LayoutActions.navigate({ route: 'authentication/login' }),
+    );
+  }
+
+  register({ login, email, password }: FormValues): void {
+    this.store.dispatch(UserActions.register({ login, email, password }));
+  }
+
+  ngOnDestroy(): void {
+    this.store.dispatch(UserActions.clearRegistration());
   }
 }

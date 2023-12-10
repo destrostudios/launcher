@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { App } from '../../model/app.model';
+import { App } from '../.././interfaces/app.interface';
 
 @Injectable()
 export class BackgroundService {

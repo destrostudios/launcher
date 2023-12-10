@@ -1,5 +1,5 @@
-import { HttpData } from '../store/state/http-data.model';
-import { AppFilesResponse } from './app-files-response.model';
+import { HttpData } from '../store/state/http-data.interface';
+import { AppFilesResponse } from './app-files-response.interface';
 import { LocalAppVersion } from './local-app-version.enum';
 
 export interface LocalApp {

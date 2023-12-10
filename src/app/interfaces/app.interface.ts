@@ -1,5 +1,5 @@
-import { Developer } from './developer.model';
-import { Genre } from './genre.model';
+import { Developer } from './developer.interface';
+import { Genre } from './genre.interface';
 
 export interface App {
   readonly id: number;

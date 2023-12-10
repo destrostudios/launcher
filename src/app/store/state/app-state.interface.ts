@@ -1,6 +1,6 @@
-import { App } from '../../model/app.model';
-import { LocalApp } from '../../model/local-app.model';
-import { HttpData } from './http-data.model';
+import { App } from '../../interfaces/app.interface';
+import { LocalApp } from '../../interfaces/local-app.interface';
+import { HttpData } from './http-data.interface';
 
 export interface AppState {
   readonly apps: HttpData<App[]>;

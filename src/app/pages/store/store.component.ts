@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { BackgroundService } from '../../core/services/background.service';
-import { App } from '../../model/app.model';
+import { App } from '../../interfaces/app.interface';
 import { getFeaturedApp } from '../../store/selectors/aggregation.selectors';
 import {
   getSelectedApp_Store,

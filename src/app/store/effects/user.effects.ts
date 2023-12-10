@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
 
+import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import * as bcrypt from 'bcryptjs';
 import { of } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { map, catchError, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppHttpService } from '../../core/services/app-http.service';
 import { UserHttpService } from '../../core/services/user-http.service';
+import { generateSalt, hashSecret } from '../../core/util/hash.util';
 import * as UserActions from '../actions/user.actions';
+import {
+  getAuthenticationEmailSecret,
+  getAuthenticationLogin,
+  getAuthenticationPassword,
+  getAuthTokenUserId,
+  getSaltClient,
+} from '../selectors/user.selectors';
 
 @Injectable()
 export class UserEffects {
   constructor(
     private actions: Actions,
+    private store: Store,
     private userHttpService: UserHttpService,
     private appHttpService: AppHttpService,
   ) {}
@@ -20,39 +29,31 @@ export class UserEffects {
   register = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.register),
-      switchMap(({ registration }) =>
-        this.userHttpService.register(registration).pipe(
-          map((_) => UserActions.registrationSuccessful({ registration })),
-          catchError((error) => of(UserActions.registrationError({ error }))),
-        ),
-      ),
-    ),
-  );
-
-  loginAfterRegistration = createEffect(() =>
-    this.actions.pipe(
-      ofType(UserActions.registrationSuccessful),
-      map(({ registration }) =>
-        UserActions.login({
-          safeCredentials: {
-            login: registration.login,
-            hashedPassword: registration.hashedPassword,
-          },
-        }),
-      ),
+      switchMap(({ login, email, password }) => {
+        const saltClient = generateSalt();
+        const clientHashedPassword = hashSecret(password, saltClient);
+        return this.userHttpService
+          .register({
+            login,
+            email,
+            saltClient,
+            clientHashedPassword,
+          })
+          .pipe(
+            map(() => UserActions.registrationSuccessful()),
+            catchError((error) => of(UserActions.registrationError({ error }))),
+          );
+      }),
     ),
   );
 
   startLoginProcess = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.startLoginProcess),
-      switchMap(({ plainCredentials }) =>
-        this.userHttpService.getSaltClient(plainCredentials.login).pipe(
+      switchMap(({ login, password }) =>
+        this.userHttpService.getSaltClient(login).pipe(
           map((saltClient) =>
-            UserActions.startLoginProcessSuccessful({
-              plainCredentials,
-              saltClient,
-            }),
+            UserActions.startLoginProcessSuccessful({ saltClient }),
           ),
           catchError((error) =>
             of(UserActions.startLoginProcessError({ error })),
@@ -65,30 +66,119 @@ export class UserEffects {
   loginAfterSaltClientReceived = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.startLoginProcessSuccessful),
-      map(({ plainCredentials, saltClient }) => {
-        const hashedPassword = bcrypt.hashSync(
-          plainCredentials.password,
-          saltClient,
-        );
-        return UserActions.login({
-          safeCredentials: {
-            login: plainCredentials.login,
-            hashedPassword,
-          },
-        });
-      }),
+      map(() => UserActions.login()),
     ),
   );
 
   login = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.login),
-      switchMap(({ safeCredentials }) =>
-        this.userHttpService.login(safeCredentials).pipe(
-          map((sessionId) => UserActions.loginSuccessful({ sessionId })),
+      withLatestFrom(
+        this.store.select(getAuthenticationLogin),
+        this.store.select(getAuthenticationPassword),
+        this.store.select(getSaltClient),
+      ),
+      switchMap(([_, login, password, saltClient]) => {
+        const clientHashedPassword = hashSecret(password, saltClient);
+        return this.userHttpService.login({ login, clientHashedPassword }).pipe(
+          map((authToken) => UserActions.loginSuccessful({ authToken })),
           catchError((error) => of(UserActions.loginError({ error }))),
+        );
+      }),
+    ),
+  );
+
+  sendEmailConfirmationEmail = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.sendEmailConfirmationEmail),
+      withLatestFrom(this.store.select(getAuthenticationLogin)),
+      switchMap(([_, login]) =>
+        this.userHttpService.sendEmailConfirmationEmail(login).pipe(
+          map(() => UserActions.sendEmailConfirmationEmailSuccessful()),
+          catchError((error) =>
+            of(UserActions.sendEmailConfirmationEmailError({ error })),
+          ),
         ),
       ),
+    ),
+  );
+
+  confirmEmail = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.confirmEmail),
+      withLatestFrom(this.store.select(getAuthenticationLogin)),
+      switchMap(([{ emailSecret }, login]) =>
+        this.userHttpService.confirmEmail(login, emailSecret).pipe(
+          map(() => UserActions.confirmEmailSuccessful()),
+          catchError((error) => of(UserActions.confirmEmailError({ error }))),
+        ),
+      ),
+    ),
+  );
+
+  loginAfterConfirmEmail = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.confirmEmailSuccessful),
+      withLatestFrom(
+        this.store.select(getAuthenticationLogin),
+        this.store.select(getAuthenticationPassword),
+      ),
+      map(([_, login, password]) =>
+        UserActions.startLoginProcess({ login, password }),
+      ),
+    ),
+  );
+
+  sendPasswordResetEmail = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.sendPasswordResetEmail),
+      switchMap(({ login }) =>
+        this.userHttpService.sendPasswordResetEmail(login).pipe(
+          map(() => UserActions.sendPasswordResetEmailSuccessful()),
+          catchError((error) =>
+            of(UserActions.sendPasswordResetEmailError({ error })),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  startResetPasswordProcess = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.startResetPasswordProcess),
+      withLatestFrom(this.store.select(getAuthenticationLogin)),
+      switchMap(([_, login]) =>
+        this.userHttpService.getSaltClient(login).pipe(
+          map((saltClient) =>
+            UserActions.startResetPasswordProcessSuccessful({ saltClient }),
+          ),
+          catchError((error) =>
+            of(UserActions.startResetPasswordProcessError({ error })),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  resetPassword = createEffect(() =>
+    this.actions.pipe(
+      ofType(UserActions.startResetPasswordProcessSuccessful),
+      withLatestFrom(
+        this.store.select(getAuthenticationLogin),
+        this.store.select(getAuthenticationPassword),
+        this.store.select(getAuthenticationEmailSecret),
+      ),
+      switchMap(([{ saltClient }, login, password, emailSecret]) => {
+        const clientHashedPassword = hashSecret(password, saltClient);
+        return this.userHttpService
+          .resetPassword(login, { emailSecret, clientHashedPassword })
+          .pipe(
+            map(() => UserActions.resetPasswordSuccessful()),
+            catchError((error) =>
+              of(UserActions.resetPasswordError({ error })),
+            ),
+          );
+      }),
     ),
   );
 
@@ -99,15 +189,16 @@ export class UserEffects {
         UserActions.addAppToAccountSuccessful,
         UserActions.removeAppFromAccountSuccessful,
       ),
-      map((_) => UserActions.loadUser()),
+      map(() => UserActions.loadUser()),
     ),
   );
 
   loadUser = createEffect(() =>
     this.actions.pipe(
       ofType(UserActions.loadUser),
-      switchMap(() =>
-        this.userHttpService.getUser().pipe(
+      withLatestFrom(this.store.select(getAuthTokenUserId)),
+      switchMap(([_, userId]) =>
+        this.userHttpService.getUser(userId).pipe(
           map((user) => UserActions.userLoaded({ user })),
           catchError((error) => of(UserActions.userError({ error }))),
         ),
@@ -138,20 +229,6 @@ export class UserEffects {
           catchError((error) =>
             of(UserActions.removeAppFromAccountError({ error })),
           ),
-        ),
-      ),
-    ),
-  );
-
-  loadAuthToken = createEffect(() =>
-    this.actions.pipe(
-      ofType(UserActions.loadAuthToken),
-      switchMap(() =>
-        this.userHttpService.getAuthToken().pipe(
-          map((authToken) =>
-            UserActions.loadAuthTokenSuccessful({ authToken }),
-          ),
-          catchError((error) => of(UserActions.loadAuthTokenError({ error }))),
         ),
       ),
     ),

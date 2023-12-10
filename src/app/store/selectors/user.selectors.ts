@@ -1,8 +1,26 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { UserState } from '../state/user-state.model';
+import { jwtDecode } from 'jwt-decode';
+
+import { getErrorMessage } from '../../core/util/error.util';
+import { UserState } from '../state/user-state.interface';
 
 const getUserState = createFeatureSelector<UserState>('user');
+
+export const getAuthenticationLogin = createSelector(
+  getUserState,
+  (state) => state.authenticationLogin,
+);
+
+export const getAuthenticationPassword = createSelector(
+  getUserState,
+  (state) => state.authenticationPassword,
+);
+
+export const getAuthenticationEmailSecret = createSelector(
+  getUserState,
+  (state) => state.authenticationEmailSecret,
+);
 
 export const isRegistrationLoading = createSelector(
   getUserState,
@@ -11,16 +29,8 @@ export const isRegistrationLoading = createSelector(
 
 export const getRegistrationErrorMessage = createSelector(
   getUserState,
-  (state) => {
-    if (state.registration && state.registration.error) {
-      if (state.registration.error.status === 403) {
-        return 'LOGIN_ALREADY_EXISTING';
-      } else {
-        return 'AN_UNEXPECTED_ERROR_OCCURED';
-      }
-    }
-    return null;
-  },
+  (state) =>
+    state.registration?.error && getErrorMessage(state.registration.error),
 );
 
 export const isSaltClientLoading = createSelector(
@@ -28,32 +38,83 @@ export const isSaltClientLoading = createSelector(
   (state) => state.saltClient && state.saltClient.isLoading,
 );
 
-export const isSessionIdLoading = createSelector(
+export const getSaltClient = createSelector(
   getUserState,
-  (state) => state.sessionId && state.sessionId.isLoading,
+  (state) => state.saltClient && state.saltClient.data,
+);
+
+export const isAuthTokenLoading = createSelector(
+  getUserState,
+  (state) => state.authToken && state.authToken.isLoading,
 );
 
 export const getLoginErrorMessage = createSelector(getUserState, (state) => {
-  if (state.saltClient && state.saltClient.error) {
-    if (state.saltClient.error.status === 404) {
-      return 'LOGIN_NOT_FOUND';
-    } else {
-      return 'AN_UNEXPECTED_ERROR_OCCURED';
-    }
-  } else if (state.sessionId && state.sessionId.error) {
-    if (state.sessionId.error.status === 403) {
-      return 'WRONG_PASSWORD';
-    } else {
-      return 'AN_UNEXPECTED_ERROR_OCCURED';
-    }
-  } else if (state.user && state.user.error) {
-    return 'AN_UNEXPECTED_ERROR_OCCURED';
+  if (state.saltClient?.error) {
+    return getErrorMessage(state.saltClient.error);
+  } else if (state.authToken?.error) {
+    return getErrorMessage(state.authToken.error);
+  } else if (state.user?.error) {
+    return getErrorMessage(state.user.error);
   }
   return null;
 });
 
-export const getSessionId = createSelector(getUserState, (state) =>
-  state.sessionId ? state.sessionId.data : null,
+export const getAuthToken = createSelector(getUserState, (state) =>
+  state.authToken ? state.authToken.data : null,
+);
+
+const getAuthTokenClaims = createSelector(getAuthToken, (authToken) =>
+  authToken ? jwtDecode(authToken) : null,
+);
+
+export const getAuthTokenUserId = createSelector(
+  getAuthTokenClaims,
+  (authTokenClaims) => (authTokenClaims ? authTokenClaims['user']['id'] : null),
+);
+
+export const isSendEmailConfirmationEmailLoading = createSelector(
+  getUserState,
+  (state) => state.sendEmailConfirmationEmail?.isLoading,
+);
+
+export const isConfirmEmailLoading = createSelector(
+  getUserState,
+  (state) => state.confirmEmail?.isLoading,
+);
+
+export const getConfirmEmailErrorMessage = createSelector(
+  getUserState,
+  (state) => {
+    if (state.confirmEmail?.error) {
+      return getErrorMessage(state.confirmEmail.error);
+    } else if (state.sendEmailConfirmationEmail?.error) {
+      return getErrorMessage(state.sendEmailConfirmationEmail.error);
+    }
+    return null;
+  },
+);
+
+export const isSendPasswordResetEmailLoading = createSelector(
+  getUserState,
+  (state) => state.sendPasswordResetEmail?.isLoading,
+);
+
+export const getSendPasswordResetEmailErrorMessage = createSelector(
+  getUserState,
+  (state) =>
+    state.sendPasswordResetEmail?.error &&
+    getErrorMessage(state.sendPasswordResetEmail.error),
+);
+
+export const isResetPasswordLoading = createSelector(
+  getUserState,
+  (state) => state.resetPassword?.isLoading,
+);
+
+export const getResetPasswordErrorMessage = createSelector(
+  getUserState,
+  (state) =>
+    state.resetPassword?.error && getErrorMessage(state.resetPassword.error),
 );
 
 export const isUserLoading = createSelector(

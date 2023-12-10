@@ -5,6 +5,10 @@
   width: 350px;
 }
 
+p {
+  margin-bottom: $baseline;
+}
+
 input[type='text'],
 input[type='password'] {
   margin-bottom: $baseline;

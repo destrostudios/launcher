@@ -3,7 +3,7 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { createReducer, on } from '@ngrx/store';
 
 import * as SelfUpdateActions from '../actions/self-update.actions';
-import { SelfUpdateState } from '../state/self-update-state.model';
+import { SelfUpdateState } from '../state/self-update-state.interface';
 
 const initialState: SelfUpdateState = {
   isSelfUpdateAvailable: null,
