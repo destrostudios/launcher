@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
+const stream = require('stream');
 
 function compareAppFiles(event, app, appFilesResponse, userDataPath) {
   const outdatedFileIds = [];
@@ -105,15 +106,8 @@ function compareNextAppFile(
   if (currentFileIndex < appFiles.length) {
     const appFile = appFiles[currentFileIndex];
     const localFilePath = getLocalFilePath(userDataPath, app, appFile.path);
-    fs.readFile(localFilePath, (error, data) => {
-      let isOutdated = true;
-      if (!error) {
-        const checksumSha256 = getChecksumSha256(data);
-        if (checksumSha256 === appFile.checksumSha256) {
-          isOutdated = false;
-        }
-      }
-      if (isOutdated) {
+    getChecksumSha256(localFilePath, (checksumSha256) => {
+      if (checksumSha256 !== appFile.checksumSha256) {
         isOutdatedCallback(appFile);
       }
       compareNextAppFile(
@@ -130,12 +124,12 @@ function compareNextAppFile(
   }
 }
 
-function getChecksumSha256(data) {
-  return crypto
-    .createHash('sha256')
-    .update(data, 'utf8')
-    .digest()
-    .toString('base64');
+function getChecksumSha256(filePath, callback) {
+  const source = fs.createReadStream(filePath);
+  const hash = crypto.createHash('sha256');
+  stream.pipeline(source, hash, (error) => {
+    callback(error ? null : hash.digest().toString('base64'));
+  });
 }
 
 function updateAppFiles(
