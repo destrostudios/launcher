@@ -1,6 +1,6 @@
 {
   "name": "destrostudios",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Destrostudios cross-game launcher, offering the possibility to login, download, update and start games.",
   "author": "destrostudios",
   "main": "electron-main.js",

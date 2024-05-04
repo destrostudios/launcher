@@ -78,7 +78,9 @@ function checkNextLocalFileForDeletion(
   if (currentFileIndex < localFilePaths.length) {
     const localFilePath = localFilePaths[currentFileIndex];
     if (
-      appFilesResponse.protections.indexOf(localFilePath) === -1 &&
+      !appFilesResponse.protections.some((protection) =>
+        localFilePath.match(protection),
+      ) &&
       !appFilesResponse.files.some((appFile) => appFile.path === localFilePath)
     ) {
       shouldBeDeletedCallback(localFilePath);
