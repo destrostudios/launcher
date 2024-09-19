@@ -5,7 +5,7 @@
   "author": "destrostudios",
   "main": "electron-main.js",
   "dependencies": {
-    "electron-is-dev": "^2.0.0",
-    "electron-updater": "^6.1.7"
+    "electron-is-dev": "^3.0.1",
+    "electron-updater": "^6.3.4"
   }
 }

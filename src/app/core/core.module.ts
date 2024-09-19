@@ -1,7 +1,8 @@
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
-  HttpClientModule,
+  provideHttpClient,
+  withInterceptorsFromDi
 } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
@@ -42,8 +43,6 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
 
 @NgModule({
   imports: [
-    HttpClientModule,
-
     StoreModule.forRoot({}),
     StoreModule.forFeature('app', appReducer),
     StoreModule.forFeature('config', configReducer),
@@ -72,6 +71,8 @@ export function HttpLoaderFactory(httpClient: HttpClient) {
   ],
   declarations: [HeaderComponent, WindowControlsComponent],
   providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+
     AppHttpService,
     BackgroundService,
     ConfigHttpService,

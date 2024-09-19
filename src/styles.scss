@@ -89,7 +89,7 @@ li {
   flex-direction: row;
 
   &:not(:last-child) {
-    margin-bottom: $baseline / 2;
+    margin-bottom: calc($baseline / 2);
   }
 
   &:before {
